@@ -2,7 +2,9 @@ package executavel;
 
 import java.util.List;
 
+import model.dao.telefonia.ClienteDAO;
 import model.dao.telefonia.EnderecoDAO;
+import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Endereco;
 
 public class ExecutavelTelefonia {
@@ -10,15 +12,21 @@ public class ExecutavelTelefonia {
 	public static void main(String[] args) {
 		
 		
-		EnderecoDAO dbaDeEnderecos = new EnderecoDAO();
+		ClienteDAO clienteDAO = new ClienteDAO();
+		Cliente pele = clienteDAO.consultarPorId(2);
 		
-		List<Endereco> enderecos = dbaDeEnderecos.consultarTodos();
+		System.out.println(pele);
 		
-		System.out.println("=============== Todos os endereços ===============");
-		for(Endereco e: enderecos) {
-			System.out.println(e);
-		}
-			
+		
+//		EnderecoDAO dbaDeEnderecos = new EnderecoDAO();
+//		
+//		List<Endereco> enderecos = dbaDeEnderecos.consultarTodos();
+//		
+//		System.out.println("=============== Todos os endereços ===============");
+//		for(Endereco e: enderecos) {
+//			System.out.println(e);
+//		}
+//			
 		
 //		Endereco enderecoQueJaExiste = dbaDeEnderecos.consultarPorId(2);
 		
