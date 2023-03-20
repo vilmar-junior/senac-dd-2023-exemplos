@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.dao.Banco;
 import model.vo.telefonia.Endereco;
@@ -94,14 +96,7 @@ public class EnderecoDAO {
 			ResultSet resultado = query.executeQuery();
 			
 			if(resultado.next()) {
-				enderecoConsultado = new Endereco();
-				enderecoConsultado.setId(resultado.getInt("id"));
-				enderecoConsultado.setCep(resultado.getString("cep"));
-				enderecoConsultado.setRua(resultado.getString("rua"));
-				enderecoConsultado.setBairro(resultado.getString("bairro"));
-				enderecoConsultado.setNumero(resultado.getString("numero"));
-				enderecoConsultado.setCidade(resultado.getString("cidade"));
-				enderecoConsultado.setEstado(resultado.getString("estado"));
+				enderecoConsultado = construirDoResultSet(resultado);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao buscar endereço com id: + " + id 
@@ -133,17 +128,37 @@ public class EnderecoDAO {
 		return excluiu;
 	}
 	
+	public List<Endereco> consultarTodos() {
+		List<Endereco> enderecos = new ArrayList<Endereco>();
+		Connection conexao = Banco.getConnection();
+		String sql =  " SELECT * FROM ENDERECO ";
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		
+		try {
+			ResultSet resultado = query.executeQuery();
+			while(resultado.next()) {
+				Endereco enderecoConsultado = construirDoResultSet(resultado);
+				enderecos.add(enderecoConsultado);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao buscar todos os endereços" 
+								+ "\n Causa: " + e.getMessage());	
+		}
+		
+		return enderecos;
+	}
 	
+	private Endereco construirDoResultSet(ResultSet resultado) throws SQLException {
+		Endereco enderecoConsultado = new Endereco(); 
+		enderecoConsultado.setId(resultado.getInt("id"));
+		enderecoConsultado.setCep(resultado.getString("cep"));
+		enderecoConsultado.setRua(resultado.getString("rua"));
+		enderecoConsultado.setBairro(resultado.getString("bairro"));
+		enderecoConsultado.setNumero(resultado.getString("numero"));
+		enderecoConsultado.setCidade(resultado.getString("cidade"));
+		enderecoConsultado.setEstado(resultado.getString("estado"));
+		return enderecoConsultado;
+	}
 			
-			
-			
-	
-	
-	
-	
-	
-	
-	
-
 }
 

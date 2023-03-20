@@ -1,5 +1,7 @@
 package executavel;
 
+import java.util.List;
+
 import model.dao.telefonia.EnderecoDAO;
 import model.vo.telefonia.Endereco;
 
@@ -7,29 +9,23 @@ public class ExecutavelTelefonia {
 
 	public static void main(String[] args) {
 		
-		Endereco endereco1 = new Endereco("88000123", "Nereu Ramos", "10", "Centro", "Florianópolis", "SC");
+		
 		EnderecoDAO dbaDeEnderecos = new EnderecoDAO();
-		//dbaDeEnderecos.inserir(endereco1);
 		
-		if(dbaDeEnderecos.excluir(9)) {
-			System.out.println("Endereço foi excluído");
-		}else {
-			System.out.println("Erro ao excluir endereço");
+		List<Endereco> enderecos = dbaDeEnderecos.consultarTodos();
+		
+		System.out.println("=============== Todos os endereços ===============");
+		for(Endereco e: enderecos) {
+			System.out.println(e);
 		}
-		
-		/*
-		 * if(endereco1.getId() != null) {
-		 * System.out.println("Novo endereço cadastrado"); }else {
-		 * System.out.println("Erro ao cadastrar endereço"); }
-		 */
+			
 		
 //		Endereco enderecoQueJaExiste = dbaDeEnderecos.consultarPorId(2);
-//		
+		
 //		System.out.println(enderecoQueJaExiste);
 //		enderecoQueJaExiste.setRua("Rua do limoeiro");
 //		
 //		boolean atualizou = dbaDeEnderecos.atualizar(enderecoQueJaExiste);
-//		enderecoQueJaExiste = dbaDeEnderecos.consultarPorId(2);
 //		if(atualizou) {
 //			System.out.println("Endereço foi atualizado");
 //		}else {
