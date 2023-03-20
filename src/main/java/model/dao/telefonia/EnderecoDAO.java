@@ -96,7 +96,7 @@ public class EnderecoDAO {
 			ResultSet resultado = query.executeQuery();
 			
 			if(resultado.next()) {
-				enderecoConsultado = construirDoResultSet(resultado);
+				enderecoConsultado = converterDeResultSetParaEntidade(resultado);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao buscar endereço com id: + " + id 
@@ -137,7 +137,7 @@ public class EnderecoDAO {
 		try {
 			ResultSet resultado = query.executeQuery();
 			while(resultado.next()) {
-				Endereco enderecoConsultado = construirDoResultSet(resultado);
+				Endereco enderecoConsultado = converterDeResultSetParaEntidade(resultado);
 				enderecos.add(enderecoConsultado);
 			}
 		} catch (SQLException e) {
@@ -148,7 +148,7 @@ public class EnderecoDAO {
 		return enderecos;
 	}
 	
-	private Endereco construirDoResultSet(ResultSet resultado) throws SQLException {
+	private Endereco converterDeResultSetParaEntidade(ResultSet resultado) throws SQLException {
 		Endereco enderecoConsultado = new Endereco(); 
 		enderecoConsultado.setId(resultado.getInt("id"));
 		enderecoConsultado.setCep(resultado.getString("cep"));
