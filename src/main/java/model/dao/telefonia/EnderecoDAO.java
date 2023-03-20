@@ -101,6 +101,9 @@ public class EnderecoDAO {
 		} catch (SQLException e) {
 			System.out.println("Erro ao buscar endereço com id: + " + id 
 								+ "\n Causa: " + e.getMessage());	
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
 		}
 		
 		return enderecoConsultado;
@@ -143,6 +146,9 @@ public class EnderecoDAO {
 		} catch (SQLException e) {
 			System.out.println("Erro ao buscar todos os endereços" 
 								+ "\n Causa: " + e.getMessage());	
+		} finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
 		}
 		
 		return enderecos;
