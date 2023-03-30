@@ -24,8 +24,11 @@
 
 * **Business Objects (BOs)**
 * Classes que encapsulam as **regras de negócio** do sistema
+
 1. EnderecoBO: (i) não deixar excluir endereço que possua cliente associado, (ii) consultar CEP (TODO chamar ViaCep)
-3. ClienteBO:  (i) não deixar excluir cliente que possua telefone associado, (ii) não deixar cadastrar cliente com CPF já usado
+
+3. ClienteBO:  (i) não deixar excluir cliente que possua telefone associado, (ii) não deixar cadastrar cliente com CPF já usado (ok), (iii) não deixar cadastrar cliente sem endereço válido (ok)
+
 4. TelefoneBO: (i) manter a consistência entre "ativo" e o telefone possuir ou não um cliente associado 
 
 ### Camada Controller
