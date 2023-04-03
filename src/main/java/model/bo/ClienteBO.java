@@ -3,10 +3,13 @@ package model.bo;
 import java.util.List;
 
 import model.dao.telefonia.ClienteDAO;
+import model.dao.telefonia.TelefoneDAO;
+import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Cliente;
+import model.vo.telefonia.Telefone;
 
 public class ClienteBO {
 
@@ -51,16 +54,22 @@ public class ClienteBO {
 	}
 	
 	/**
-	 * não deixar excluir cliente que possua telefone associado
+	 * Não deixar excluir cliente que possua telefone associado
 	 * Criar exceção ClienteComTelefoneException
 	 * Caso cliente possua telefone(s): lançar ClienteComTelefoneException
 	 * Caso contrário: chamar dao.excluir(id)
 	 * @param id
 	 * @return se excluiu ou não o cliente
 	 */
-	public boolean excluir(int id) {
+	public boolean excluir(int id) throws ClienteComTelefoneException {
+		//FORMA 1 DE RESOLUÇÃO
+		Cliente clienteBuscado = dao.consultarPorId(id);
 		
-		return false;
+		if(!clienteBuscado.getTelefones().isEmpty()) {
+			throw new ClienteComTelefoneException("Cliente possui telefone(s)");
+		}
+		
+		return dao.excluir(id);
 	}
 	
 	public Cliente consultarPorId(int id) {
@@ -72,7 +81,8 @@ public class ClienteBO {
 	}
 	
 	private void validarEndereco(Cliente cliente) throws EnderecoInvalidoException {
-		if(cliente.getEndereco() == null || cliente.getEndereco().getId() == null) {
+		if(cliente.getEndereco() == null 
+				|| cliente.getEndereco().getId() == null) {
 			throw new EnderecoInvalidoException("Endereço não informado");
 		}
 	}
