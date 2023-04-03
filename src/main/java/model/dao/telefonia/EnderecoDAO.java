@@ -165,6 +165,5 @@ public class EnderecoDAO {
 		enderecoConsultado.setEstado(resultado.getString("estado"));
 		return enderecoConsultado;
 	}
-			
 }
 
