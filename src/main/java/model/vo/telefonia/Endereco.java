@@ -101,4 +101,8 @@ public class Endereco {
 		return "Endereco [cep=" + cep + ", rua=" + rua + ", numero=" + numero + ", bairro=" + bairro + ", cidade="
 				+ cidade + ", estado=" + estado + "]";
 	}
+
+	public String getEnderecoResumido() {
+		return rua + "nº" + numero + ", " + bairro + ", " + cidade + "/" + estado;
+	}
 }

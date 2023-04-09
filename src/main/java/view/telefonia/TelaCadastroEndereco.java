@@ -1,4 +1,4 @@
-package view;
+package view.telefonia;
 
 import java.awt.EventQueue;
 

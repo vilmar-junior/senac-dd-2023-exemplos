@@ -22,7 +22,6 @@ public class ExecutavelTelefonia {
 		
 		ClienteController controladorDeClientes = new ClienteController();
 		
-		
 		Cliente novoCliente = new Cliente();
 		novoCliente.setNome("Mário");
 		novoCliente.setCpf("19122233312");
@@ -35,6 +34,8 @@ public class ExecutavelTelefonia {
 			
 			JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso! Id gerado: " + novoCliente.getId(), 
 					"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+			
+			//Exemplo de captura de múltiplas exceções, válido apenas a partir do Java versão 7
 		} catch (CpfJaUtilizadoException 
 					| EnderecoInvalidoException 
 					| CampoInvalidoException e) {
