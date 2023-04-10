@@ -43,8 +43,8 @@ public class EnderecoController {
 	}
 	
 
-	public boolean atualizar(Endereco enderecoAlterado){
-		//TODO validar o preenchimento dos campos obrigatórios
+	public boolean atualizar(Endereco enderecoAlterado) throws CampoInvalidoException{
+		validarCamposObrigatorios(enderecoAlterado);
 		return bo.atualizar(enderecoAlterado);
 	}
 	
