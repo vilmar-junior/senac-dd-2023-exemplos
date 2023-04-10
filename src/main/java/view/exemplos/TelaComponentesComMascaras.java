@@ -18,10 +18,11 @@ import javax.swing.text.MaskFormatter;
 /**
  * 
  * @author Vilmar César Pereira Júnior
- *
+ * FONTE: https://docs.oracle.com/javase/7/docs/api/javax/swing/text/MaskFormatter.html
  */
 public class TelaComponentesComMascaras extends JFrame {
 
+	private static final long serialVersionUID = -4148728762222132202L;
 	private JPanel contentPane;
 	private JFormattedTextField formattedTextFieldCnpj;
 	private JFormattedTextField formattedTextFieldCpf;
@@ -101,7 +102,7 @@ public class TelaComponentesComMascaras extends JFrame {
 			contentPane.add(lblTelefone);
 
 			formattedTextFieldTelefone = new JFormattedTextField(mascaraTelefone);
-			formattedTextFieldTelefone.setBounds(94, 53, 95, 20);
+			formattedTextFieldTelefone.setBounds(94, 53, 106, 20);
 			contentPane.add(formattedTextFieldTelefone);
 
 			lblCpf = new JLabel("CPF:");
@@ -120,24 +121,24 @@ public class TelaComponentesComMascaras extends JFrame {
 			contentPane.add(lblCep);
 
 			formattedTextFieldCep = new JFormattedTextField(mascaraCep);
-			formattedTextFieldCep.setBounds(94, 83, 95, 20);
+			formattedTextFieldCep.setBounds(94, 83, 106, 20);
 			contentPane.add(formattedTextFieldCep);
 
 			formattedTextFieldCpf = new JFormattedTextField(mascaraCpf);
-			formattedTextFieldCpf.setBounds(270, 22, 154, 20);
+			formattedTextFieldCpf.setBounds(270, 22, 139, 20);
 			contentPane.add(formattedTextFieldCpf);
 
 			formattedTextFieldCnpj = new JFormattedTextField(mascaraCnpj);
-			formattedTextFieldCnpj.setBounds(270, 53, 154, 20);
+			formattedTextFieldCnpj.setBounds(270, 53, 139, 20);
 			contentPane.add(formattedTextFieldCnpj);
 
 			lblValorEmReais = new JLabel("R$:");
 			lblValorEmReais.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblValorEmReais.setBounds(199, 83, 61, 14);
+			lblValorEmReais.setBounds(199, 86, 61, 14);
 			contentPane.add(lblValorEmReais);
 
 			txtValorEmReais = new JNumberFormatField(2);
-			txtValorEmReais.setBounds(270, 86, 155, 20);
+			txtValorEmReais.setBounds(270, 83, 139, 20);
 			contentPane.add(txtValorEmReais);
 			
 			btnPegarValoresEmString = new JButton("Pegar valores em String");

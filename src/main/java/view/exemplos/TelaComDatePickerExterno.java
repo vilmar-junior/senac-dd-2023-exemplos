@@ -64,7 +64,11 @@ public class TelaComDatePickerExterno {
 		dateSettings = new DatePickerSettings();
 		dateSettings.setAllowKeyboardEditing(false);
 
+		//Exemplo para bloquear um período (datas antes de 01/04/2022)
 		dataTeste = new DateTimePicker(dateSettings, null);
+		LocalDate primeiraDataPermitida = LocalDate.of(2023, 4, 1);
+		dateSettings.setDateRangeLimits(primeiraDataPermitida , null);
+		
 		dataTeste.setBounds(80, 60, 300, 30);
 		frame.getContentPane().add(dataTeste);
 
