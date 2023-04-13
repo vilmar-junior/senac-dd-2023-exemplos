@@ -1,5 +1,6 @@
 package model.vo.telefonia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
@@ -12,7 +13,7 @@ public class Cliente {
 	private Endereco endereco;
 	
 	public Cliente() {
-		
+		this.telefones = new ArrayList<>();
 	}
 	
 	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
