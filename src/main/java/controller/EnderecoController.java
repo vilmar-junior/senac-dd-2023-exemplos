@@ -6,6 +6,7 @@ import model.bo.EnderecoBO;
 import model.exception.CampoInvalidoException;
 import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Endereco;
+import model.vo.telefonia.Telefone;
 
 public class EnderecoController {
 
@@ -23,6 +24,7 @@ public class EnderecoController {
 		mensagemValidacao += validarString(endereco.getCep(), "cep");
 		mensagemValidacao += validarString(endereco.getRua(), "rua");
 		mensagemValidacao += validarString(endereco.getNumero(), "número");
+		mensagemValidacao += validarString(endereco.getBairro(), "bairro");
 		mensagemValidacao += validarString(endereco.getCidade(), "cidade");
 		mensagemValidacao += validarString(endereco.getEstado(), "estado");
 		

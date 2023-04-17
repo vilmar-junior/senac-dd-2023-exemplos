@@ -133,7 +133,8 @@ public class TelaCadastroEndereco {
 				endereco.setNumero(txtNumero.getText());
 				endereco.setCidade(txtCidade.getText());
 				endereco.setEstado((String) cbEstado.getSelectedItem());
-						
+				endereco.setBairro(txtBairro.getText());
+				
 				EnderecoController controller = new EnderecoController();
 				try {
 					controller.inserir(endereco);
