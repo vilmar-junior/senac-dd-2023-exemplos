@@ -5,10 +5,15 @@ import java.text.ParseException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.text.MaskFormatter;
 
 import controller.ClienteController;
+import controller.TelefoneController;
+import model.exception.TelefoneJaUtilizadoException;
+import model.vo.telefonia.Cliente;
+import model.vo.telefonia.Telefone;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JComboBox;
@@ -59,6 +64,11 @@ public class TelaCadastroTelefone {
 		esconderTodosOsComponentes();
 	}
 
+	/**
+	 * Método que será chamado ao iniciar a tela,
+	 * escondendo todos os componentes exceto os 
+	 * radiobuttons "Fixo" e "Móvel"
+	 */
 	private void esconderTodosOsComponentes() {
 		lblNumero.setVisible(false);
 		txtTelefoneFixo.setVisible(false);
@@ -67,6 +77,9 @@ public class TelaCadastroTelefone {
 		btnSalvar.setEnabled(false);
 	}
 	
+	/**
+	 * Mostra os componentes ao clicar em "Fixo" ou "Móvel"
+	 */
 	private void mostrarComponentesComuns() {
 		lblNumero.setVisible(true);
 		lblCliente.setVisible(true);
@@ -75,8 +88,8 @@ public class TelaCadastroTelefone {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
-	 * @throws ParseException 
+	 * Método chamado no construtor da tela
+	 * Cria e posiciona todos os componentes 
 	 */
 	private void initialize() throws ParseException {
 		frmNovoTelefone = new JFrame();
@@ -97,14 +110,21 @@ public class TelaCadastroTelefone {
 		lblCliente.setBounds(30, 90, 45, 14);
 		frmNovoTelefone.getContentPane().add(lblCliente);
 		
+		//Determina as máscaras para telefone. Exemplos:
+		//Fixo: (48)3232-3232
+		//Móvel:(48)98232-3232  
 		mascaraTelefoneFixo = new MaskFormatter("(##)####-####");
 		mascaraTelefoneMovel = new MaskFormatter("(##)9####-####");
+		
+		//Força o componente a informar apenas o valor SEM máscara 
+		//FONTE: https://forums.oracle.com/ords/apexds/post/retrieve-unformatted-text-from-jformattedtextfield-2120
 		mascaraTelefoneFixo.setValueContainsLiteralCharacters(false);
 		mascaraTelefoneMovel.setValueContainsLiteralCharacters(false);
 		
 		rbMovel = new JRadioButton("Móvel");
 		rbMovel.setBounds(260, 25, 100, 23);
 		rbMovel.addActionListener(new ActionListener() {
+			//Método de clique no radiobutton "Móvel"
 			public void actionPerformed(ActionEvent arg0) {
 				mostrarComponentesComuns();
 				txtTelefoneMovel.setVisible(true);
@@ -116,6 +136,7 @@ public class TelaCadastroTelefone {
 		rbFixo = new JRadioButton("Fixo");
 		rbFixo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//Método de clique no radiobutton "Móvel"
 				mostrarComponentesComuns();
 				txtTelefoneMovel.setVisible(false);
 				txtTelefoneFixo.setVisible(true);
@@ -124,6 +145,8 @@ public class TelaCadastroTelefone {
 		rbFixo.setBounds(90, 26, 100, 23);
 		frmNovoTelefone.getContentPane().add(rbFixo);
 		
+		//Usado para agrupar os radiobuttons "fixo" e "móvel"
+		//tornando a seleção deles única
 		ButtonGroup grupo = new ButtonGroup();
 		grupo.add(rbFixo);
 		grupo.add(rbMovel);
@@ -140,14 +163,75 @@ public class TelaCadastroTelefone {
 		txtTelefoneMovel.setVisible(false);
 		frmNovoTelefone.getContentPane().add(txtTelefoneMovel);
 		
+		//Busca todos os clientes cadastrados no banco
 		ClienteController cliController = new ClienteController();
 		cbClientes = new JComboBox(cliController.consultarTodos().toArray());
 		cbClientes.setBounds(90, 90, 270, 22);
-		cbClientes.setSelectedItem(null); //Inicia sem preenchimento
+		
+		//Inicia sem preenchimento
+		cbClientes.setSelectedItem(null); 
 		frmNovoTelefone.getContentPane().add(cbClientes);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Telefone novoTelefone = new Telefone();
+				novoTelefone.setMovel(rbMovel.isSelected());
+				
+				preencherNumeroDdd(novoTelefone);
+				
+				Cliente clienteSelecionado = (Cliente) cbClientes.getSelectedItem();
+				if(clienteSelecionado != null) {
+					novoTelefone.setIdCliente(clienteSelecionado.getId());
+				}
+				
+				TelefoneController telController = new TelefoneController();
+				try {
+					telController.inserir(novoTelefone);
+					JOptionPane.showMessageDialog(null, "Telefone salvo!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+				} catch (TelefoneJaUtilizadoException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"Atenção!", JOptionPane.ERROR_MESSAGE);
+				}
+				limparTela();
+			}
+
+			private void preencherNumeroDdd(Telefone novoTelefone) {
+				String numeroCompletoDigitado = "";
+				if(novoTelefone.isMovel()) {
+					try {
+						numeroCompletoDigitado = mascaraTelefoneMovel
+								.stringToValue(txtTelefoneMovel.getText()) + "\n";
+					} catch (ParseException e1) {
+						JOptionPane.showMessageDialog(null, "Informe um número válido", "Atenção", JOptionPane.WARNING_MESSAGE);
+					}
+				}else {
+					try {
+						numeroCompletoDigitado = mascaraTelefoneFixo
+								.stringToValue(txtTelefoneFixo.getText()) + "\n";
+					} catch (ParseException e1) {
+						JOptionPane.showMessageDialog(null, "Informe um número válido", "Atenção", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+				
+				String ddd = numeroCompletoDigitado.substring(0,2);
+				String numero = numeroCompletoDigitado.substring(2);
+				
+				novoTelefone.setDdd(ddd);
+				novoTelefone.setNumero(numero);
+			}
+		});
 		btnSalvar.setBounds(30, 123, 330, 62);
 		frmNovoTelefone.getContentPane().add(btnSalvar);
+	}
+
+	/**
+	 * Limpa todos os campos da tela (usado após salvar um telefone)
+	 * */
+	protected void limparTela() {
+		this.rbFixo.setSelected(false);
+		this.rbMovel.setSelected(false);
+		this.txtTelefoneFixo.setText("");
+		this.txtTelefoneMovel.setText("");
+		this.cbClientes.setSelectedIndex(-1);
 	}
 }

@@ -3,13 +3,14 @@ package controller;
 import java.util.List;
 
 import model.bo.TelefoneBO;
+import model.exception.TelefoneJaUtilizadoException;
 import model.vo.telefonia.Telefone;
 
 public class TelefoneController {
 
 	private TelefoneBO bo = new TelefoneBO();
 	
-	public Telefone inserir(Telefone novoTelefone) {
+	public Telefone inserir(Telefone novoTelefone) throws TelefoneJaUtilizadoException {
 		//TODO validar o preenchimento dos campos obrigatórios
 		return bo.inserir(novoTelefone);
 	}
