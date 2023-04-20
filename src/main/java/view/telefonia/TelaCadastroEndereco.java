@@ -163,6 +163,7 @@ public class TelaCadastroEndereco {
 						controller.atualizar(endereco);
 					}else {
 						controller.inserir(endereco);
+						limparTela();
 					}
 					JOptionPane.showMessageDialog(null, "Endereço:" + (edicao ? " atualizado " : " criado ") + "com sucesso!",
 														"Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -187,6 +188,16 @@ public class TelaCadastroEndereco {
 		}
 		
 		frmCadastroDeEndereco.setVisible(true);
+	}
+
+	protected void limparTela() {
+		this.endereco = null;
+		txtCep.setText("");
+		txtRua.setText("");
+		txtNumero.setText("");
+		txtCidade.setText("");
+		txtBairro.setText("");
+		cbEstado.setSelectedItem(null);
 	}
 }
 

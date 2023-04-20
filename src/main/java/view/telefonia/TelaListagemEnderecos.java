@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import controller.EnderecoController;
+import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Endereco;
 
 /**
@@ -37,20 +38,19 @@ public class TelaListagemEnderecos {
 	
 	//Objeto usado para armazenar o endereço que o usuário selecionar na tabela (tblEnderecos)
 	private Endereco enderecoSelecionado;
+	private EnderecoController enderecoController = new EnderecoController();
 
 	//Métodos usados no JTable
 	private void limparTabela() {
 		tblEnderecos.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
-		tblEnderecos = new JTable(tblEnderecos.getModel()) {
-			public boolean isCellEditable(int rowIndex, int colIndex) {
-				return false;
-			}
-		};
 	}
 
 	private void atualizarTabelaEnderecos() {
 		this.limparTabela();
 
+		EnderecoController controller = new EnderecoController();
+		enderecos = (ArrayList<Endereco>) controller.consultarTodos();
+		
 		DefaultTableModel model = (DefaultTableModel) tblEnderecos.getModel();
 		//Preenche os valores na tabela linha a linha
 		for (Endereco e : enderecos) {
@@ -104,9 +104,6 @@ public class TelaListagemEnderecos {
 		btnBuscar = new JButton("Buscar Todos");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EnderecoController controller = new EnderecoController();
-				enderecos = (ArrayList<Endereco>) controller.consultarTodos();
-				
 				atualizarTabelaEnderecos();
 			}
 		});
@@ -126,7 +123,20 @@ public class TelaListagemEnderecos {
 		btnExcluir.setBounds(360, 430, 120, 35);
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO implementar
+				int opcaoSelecionada = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do endereço selecionado?");
+				
+				if(opcaoSelecionada == JOptionPane.YES_OPTION) {
+					try {
+						enderecoController.excluir(enderecoSelecionado.getId());
+						JOptionPane.showMessageDialog(null, "Endereço excluído!",
+								"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+						
+						atualizarTabelaEnderecos();
+					} catch (EnderecoInvalidoException excecao) {
+						JOptionPane.showMessageDialog(null, excecao.getMessage(),
+								"Atenção", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		
@@ -148,8 +158,8 @@ public class TelaListagemEnderecos {
 				int indiceSelecionado = tblEnderecos.getSelectedRow();
 				
 				if (indiceSelecionado > 0) {
-					//Primeira linha da tabela contém o cabeçalho, por isso o '+1' 
-					enderecoSelecionado = enderecos.get(indiceSelecionado + 1); 
+					//Primeira linha da tabela contém o cabeçalho, por isso o '-1' 
+					enderecoSelecionado = enderecos.get(indiceSelecionado - 1); 
 					btnEditar.setEnabled(true);
 					btnExcluir.setEnabled(true);
 				} else {
