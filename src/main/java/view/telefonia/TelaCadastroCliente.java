@@ -72,7 +72,8 @@ public class TelaCadastroCliente {
 		frmNovoCliente = new JFrame();
 		frmNovoCliente.setTitle("Novo Cliente");
 		frmNovoCliente.setBounds(100, 100, 420, 220);
-		frmNovoCliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//Fecha apenas a janela atual, sem destruir as demais abertas
+		frmNovoCliente.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmNovoCliente.getContentPane().setLayout(null);
 		
 		mascaraCpf = new MaskFormatter("###.###.###-##");

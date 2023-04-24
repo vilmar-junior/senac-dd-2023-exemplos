@@ -153,12 +153,22 @@ public class TelaListagemEnderecos {
 		
 		//Evento de clique em uma linha da tabela
 		//Habilita/desabilita os botões "Editar" e "Excluir"
-//		tblEnderecos.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				
-//			}
-//		});
+		tblEnderecos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int indiceSelecionado = tblEnderecos.getSelectedRow();
+				
+				if (indiceSelecionado > 0) {
+					//Primeira linha da tabela contém o cabeçalho, por isso o '-1' 
+					enderecoSelecionado = enderecos.get(indiceSelecionado - 1); 
+					btnEditar.setEnabled(true);
+					btnExcluir.setEnabled(true);
+				} else {
+					btnEditar.setEnabled(false);
+					btnExcluir.setEnabled(false);
+				}
+			}
+		});
 		
 		frmListagemDeEnderecos.getContentPane().add(tblEnderecos);
 	}
