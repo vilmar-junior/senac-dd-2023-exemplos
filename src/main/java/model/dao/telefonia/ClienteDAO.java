@@ -129,7 +129,7 @@ public class ClienteDAO {
 		try {
 			ResultSet resultado = query.executeQuery();
 			
-			if(resultado.next()) {
+			while(resultado.next()) {
 				Cliente clienteBuscado = montarClienteComResultadoDoBanco(resultado);
 				clientes.add(clienteBuscado);
 			}

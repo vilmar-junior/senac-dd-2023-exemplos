@@ -16,6 +16,8 @@ _O endereço por sua vez é composto pelo nome da rua, CEP, estado e cidade._
 
 ###### Entidades
 
+##TODO criar uma interface BaseDAO
+
 1. Endereco: id(Integer), rua(String), numero(String), cep(String), cidade(String), estado(String) (<span><strong>&#10003;</strong></span>)
 2. Cliente:  id(Integer), nome(String), cpf(String), endereco(Endereco) (<span><strong>&#10003;</strong></span>)
 3. Telefone: id(Integer), ddd(String), numero(String), ativo(boolean), movel(boolean), dono(Cliente - pode ser null) (<span><strong>&#10003;</strong></span>)
@@ -72,8 +74,8 @@ _O endereço por sua vez é composto pelo nome da rua, CEP, estado e cidade._
 
 
 * TelaCadastroEndereco (<span><strong>&#10003;</strong></span>)
-* TelaCadastroCliente
-* TelaCadastroTelefone 
+* TelaCadastroCliente (<span><strong>&#10003;</strong></span>)
+* TelaCadastroTelefone (<span><strong>&#10003;</strong></span>)
 
 
 2.Tela de listagem: (geralmente) uma tabela ou cards mostrando todos os itens buscados. Dispõe de opções para editar ou excluir um item selecionado
@@ -81,7 +83,7 @@ _O endereço por sua vez é composto pelo nome da rua, CEP, estado e cidade._
 
 * TelaListagemEndereco (<span><strong>&#10003;</strong></span>)
 * TelaListagemCliente (<span><strong>&#10003;</strong></span>)
-* TelaCadastroTelefone 
+* TelaListagemTelefone 
 
 
 

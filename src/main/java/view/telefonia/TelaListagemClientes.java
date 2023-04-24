@@ -14,6 +14,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +23,9 @@ import javax.swing.text.MaskFormatter;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import controller.ClienteController;
+import model.exception.ClienteComTelefoneException;
 import model.vo.telefonia.Cliente;
+import java.awt.Color;
 
 public class TelaListagemClientes {
 
@@ -38,19 +41,20 @@ public class TelaListagemClientes {
 	private DatePicker dtNascimentoInicial;
 	private DatePicker dtNascimentoFinal;
 	private JButton btnEditar;
-	private JLabel lblCpf;
 	private JButton btnBuscar;
+	private JButton btnBuscarTodos;
+	private JButton btnGerarPlanilha;
+	private JButton btnExcluir;
+	private JLabel lblCpf;
 	private JLabel lblNome;
 	private JLabel lblDataNascimentoDe;
 	private JLabel lblAte;
+	
+	private ClienteController controller = new ClienteController();
+	private Cliente clienteSelecionado;
 
 	private void limparTabelaClientes() {
 		tblClientes.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
-		tblClientes = new JTable(tblClientes.getModel()) {
-			public boolean isCellEditable(int rowIndex, int colIndex) {
-				return false;
-			}
-		};
 	}
 
 	private void atualizarTabelaClientes() {
@@ -59,8 +63,7 @@ public class TelaListagemClientes {
 		DefaultTableModel model = (DefaultTableModel) tblClientes.getModel();
 
 		for (Cliente c : clientes) {
-			Object[] novaLinhaDaTabela = new Object[4];
-
+			Object[] novaLinhaDaTabela = new Object[5];
 			novaLinhaDaTabela[0] = c.getNome();
 			novaLinhaDaTabela[1] = c.getCpf();
 			novaLinhaDaTabela[2] = c.getEndereco().getEnderecoResumido();
@@ -104,7 +107,10 @@ public class TelaListagemClientes {
 		frmListagemDeClientes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmListagemDeClientes.getContentPane().setLayout(null);
 
-		btnBuscar = new JButton("Buscar");
+		btnBuscar = new JButton("Buscar (em construção...)");
+		btnBuscar.setBackground(new Color(255, 0, 255));
+		btnBuscar.setForeground(new Color(0, 0, 0));
+		btnBuscar.setEnabled(false);
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO descomentar na aula 11
@@ -113,14 +119,12 @@ public class TelaListagemClientes {
 //				seletor.setSobrenome(txtSobrenome.getText());
 //				seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
 //				seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
-
-				ClienteController controller = new ClienteController();
 //				clientes = controller.listarClientes(seletor);
 
 				atualizarTabelaClientes();
 			}
 		});
-		btnBuscar.setBounds(285, 125, 120, 35);
+		btnBuscar.setBounds(285, 125, 200, 35);
 		frmListagemDeClientes.getContentPane().add(btnBuscar);
 
 		tblClientes = new JTable();
@@ -133,8 +137,11 @@ public class TelaListagemClientes {
 
 				if (indiceSelecionado > 0) {
 					btnEditar.setEnabled(true);
+					btnExcluir.setEnabled(true);
+					clienteSelecionado = clientes.get(indiceSelecionado - 1);
 				} else {
 					btnEditar.setEnabled(false);
+					btnExcluir.setEnabled(true);
 				}
 			}
 		});
@@ -142,11 +149,11 @@ public class TelaListagemClientes {
 		frmListagemDeClientes.getContentPane().add(tblClientes);
 
 		lblNome = new JLabel("Nome:");
-		lblNome.setBounds(25, 25, 61, 16);
+		lblNome.setBounds(10, 25, 61, 16);
 		frmListagemDeClientes.getContentPane().add(lblNome);
 
 		txtNome = new JTextField();
-		txtNome.setBounds(150, 20, 250, 28);
+		txtNome.setBounds(160, 20, 240, 28);
 		frmListagemDeClientes.getContentPane().add(txtNome);
 		txtNome.setColumns(10);
 
@@ -165,24 +172,23 @@ public class TelaListagemClientes {
 		}
 
 		lblDataNascimentoDe = new JLabel("Data de dascimento. De:");
-		lblDataNascimentoDe.setBounds(25, 60, 175, 10);
+		lblDataNascimentoDe.setBounds(10, 60, 154, 10);
 		frmListagemDeClientes.getContentPane().add(lblDataNascimentoDe);
 
 		dtNascimentoInicial = new DatePicker();
-		dtNascimentoInicial.setBounds(150, 55, 450, 30);
+		dtNascimentoInicial.setBounds(160, 55, 450, 30);
 		frmListagemDeClientes.getContentPane().add(dtNascimentoInicial);
 
 		lblAte = new JLabel("Até:");
-		lblAte.setBounds(25, 90, 175, 10);
+		lblAte.setBounds(10, 90, 175, 10);
 		frmListagemDeClientes.getContentPane().add(lblAte);
 
 		dtNascimentoFinal = new DatePicker();
-		dtNascimentoFinal.setBounds(150, 90, 450, 30);
+		dtNascimentoFinal.setBounds(160, 90, 450, 30);
 		frmListagemDeClientes.getContentPane().add(dtNascimentoFinal);
 
-		JButton btnGerarPlanilha = new JButton("Gerar Planilha (Aula 12)");
+		btnGerarPlanilha = new JButton("Gerar Planilha (Aula 12)");
 		btnGerarPlanilha.setEnabled(false);
-		
 		btnGerarPlanilha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser janelaSelecaoDestinoArquivo = new JFileChooser();
@@ -191,14 +197,12 @@ public class TelaListagemClientes {
 				int opcaoSelecionada = janelaSelecaoDestinoArquivo.showSaveDialog(null);
 				if (opcaoSelecionada == JFileChooser.APPROVE_OPTION) {
 					String caminhoEscolhido = janelaSelecaoDestinoArquivo.getSelectedFile().getAbsolutePath();
-
-					ClienteController controller = new ClienteController();
 					//TODO decomentar na aula 11
 					//controller.gerarRelatorio(clientes, caminhoEscolhido);
 				}
 			}
 		});
-		btnGerarPlanilha.setBounds(120, 500, 200, 45);
+		btnGerarPlanilha.setBounds(25, 500, 200, 45);
 		frmListagemDeClientes.getContentPane().add(btnGerarPlanilha);
 
 		btnEditar = new JButton("Editar");
@@ -211,8 +215,41 @@ public class TelaListagemClientes {
 				JOptionPane.showMessageDialog(null, "Chamar a tela de edição e passar o objeto clienteSelecionado...");
 			}
 		});
-		btnEditar.setBounds(350, 500, 200, 45);
+		btnEditar.setBounds(250, 500, 200, 45);
 		btnEditar.setEnabled(false);
 		frmListagemDeClientes.getContentPane().add(btnEditar);
+		
+		btnBuscarTodos = new JButton("Buscar todos");
+		btnBuscarTodos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				clientes = (ArrayList<Cliente>) controller.consultarTodos();
+				atualizarTabelaClientes();
+			}
+		});
+		btnBuscarTodos.setBounds(155, 125, 120, 35);
+		frmListagemDeClientes.getContentPane().add(btnBuscarTodos);
+		
+		btnExcluir = new JButton("Excluir");
+		btnExcluir.setEnabled(false);
+		btnExcluir.setBounds(475, 500, 200, 45);
+		btnExcluir.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int opcaoSelecionada = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do telefone selecionado?");
+				
+				if(opcaoSelecionada == JOptionPane.YES_OPTION) {
+					try {
+						controller.excluir(clienteSelecionado.getId());
+						JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso");
+						clientes = (ArrayList<Cliente>) controller.consultarTodos();
+						atualizarTabelaClientes();
+					} catch (ClienteComTelefoneException e1) {
+						JOptionPane.showConfirmDialog(null, e1.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			}
+		});
+		frmListagemDeClientes.getContentPane().add(btnExcluir);
 	}
 }
