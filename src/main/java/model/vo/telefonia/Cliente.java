@@ -6,7 +6,7 @@ import java.util.List;
 public class Cliente {
 
 	private Integer id;
-	private String nome;
+	private String nomeCompleto;
 	private String cpf;
 	private List<Telefone> telefones;
 	private boolean ativo;
@@ -19,7 +19,7 @@ public class Cliente {
 	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
 		this.id = id;
-		this.nome = nome;
+		this.nomeCompleto = nome;
 		this.cpf = cpf;
 		this.telefones = telefones;
 		this.ativo = ativo;
@@ -30,7 +30,7 @@ public class Cliente {
 
 	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
-		this.nome = nome;
+		this.nomeCompleto = nome;
 		this.cpf = cpf;
 		this.telefones = telefones;
 		this.ativo = ativo;
@@ -47,11 +47,11 @@ public class Cliente {
 	}
 
 	public String getNome() {
-		return nome;
+		return nomeCompleto;
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nomeCompleto = nome;
 	}
 
 	public String getCpf() {
@@ -88,7 +88,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return nome + " (" + cpf + ")";
+		return nomeCompleto + " (" + cpf + ")";
 	}
 	
 }
