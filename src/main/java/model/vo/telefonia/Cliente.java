@@ -6,7 +6,7 @@ import java.util.List;
 public class Cliente {
 
 	private Integer id;
-	private String nome;
+	private String nomeAlteradoNoGithub;
 	private String cpf;
 	private List<Telefone> telefones;
 	private boolean ativo;
