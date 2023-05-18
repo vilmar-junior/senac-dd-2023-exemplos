@@ -19,6 +19,8 @@ import java.text.ParseException;
 public class MenuTelefonia {
 
 	private JFrame frmSistemaDeTelefonia;
+	private PainelListagemCliente painelListagemCliente;
+	private PainelCadastroCliente painelCadastroCliente;
 
 	/**
 	 * Launch the application.
@@ -63,12 +65,11 @@ public class MenuTelefonia {
 		
 		JMenuItem mntmCadastroCliente = new JMenuItem("Cadastro");
 		mntmCadastroCliente.addActionListener(new ActionListener() {
-			//Evento de clique no botão -> instancia o painel e troca
-			//TODO arrumar bug, pois não aparece a tela
 			public void actionPerformed(ActionEvent e) {
-				PainelCadastroCliente painel = new PainelCadastroCliente();
-				painel.setVisible(true);
-				frmSistemaDeTelefonia.setContentPane(painel);
+				painelCadastroCliente = new PainelCadastroCliente(null);
+				painelCadastroCliente.setVisible(true);
+				frmSistemaDeTelefonia.setContentPane(painelCadastroCliente);
+				frmSistemaDeTelefonia.pack();
 			}
 		});
 		mntmCadastroCliente.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
@@ -76,6 +77,22 @@ public class MenuTelefonia {
 		mnCliente.add(mntmCadastroCliente);
 		
 		JMenuItem mntmListarCliente = new JMenuItem("Listagem");
+		mntmListarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				painelListagemCliente = new PainelListagemCliente();
+				painelListagemCliente.getBtnEditar().addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						painelCadastroCliente = new PainelCadastroCliente(painelListagemCliente.getClienteSelecionado());
+						painelCadastroCliente.setVisible(true);
+						frmSistemaDeTelefonia.setContentPane(painelCadastroCliente);
+						frmSistemaDeTelefonia.pack();
+					}
+				});
+				painelListagemCliente.setVisible(true);
+				frmSistemaDeTelefonia.setContentPane(painelListagemCliente);
+			}
+		});
 		mntmListarCliente.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-menu-do-usuário-male-skin-type-7-20.png")));
 		mnCliente.add(mntmListarCliente);
 		

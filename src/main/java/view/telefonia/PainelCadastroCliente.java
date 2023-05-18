@@ -1,224 +1,150 @@
 package view.telefonia;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
-
-import com.github.lgooddatepicker.components.DatePicker;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
 
 import controller.ClienteController;
-import model.exception.ClienteComTelefoneException;
+import controller.EnderecoController;
+import model.exception.CampoInvalidoException;
+import model.exception.CpfJaUtilizadoException;
+import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Cliente;
+import model.vo.telefonia.Endereco;
+
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.text.MaskFormatter;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 public class PainelCadastroCliente extends JPanel {
-	private JTable tblClientes;
-	private ArrayList<Cliente> clientes;
-	private String[] nomesColunas = { "Nome", "CPF", "Endereço", "Total de Telefones", "Ativo?" };
+	private Cliente cliente;
 	private JTextField txtNome;
+	private JLabel lblTitulo;
+	private JLabel lblNome;
+	private JLabel lblCpf;
 	private MaskFormatter mascaraCpf;
 	private JFormattedTextField txtCPF;
+	private JLabel lblEndereco;
+	private JComboBox cbEndereco;
+	private JButton btnSalvar;
+	private JButton btnVoltar;
 	
-	//componentes externos -> dependência "LGoodDatePicker" foi adicionada no pom.xml
-	private DatePicker dtNascimentoInicial;
-	private DatePicker dtNascimentoFinal;
-	private JButton btnEditar;
-	private JButton btnBuscar;
-	private JButton btnBuscarTodos;
-	private JButton btnGerarPlanilha;
-	private JButton btnExcluir;
-	private JLabel lblCpf;
-	private JLabel lblNome;
-	private JLabel lblDataNascimentoDe;
-	private JLabel lblAte;
-	
-	private ClienteController controller = new ClienteController();
-	private Cliente clienteSelecionado;
-
-	private void limparTabelaClientes() {
-		tblClientes.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
-	}
-
-	private void atualizarTabelaClientes() {
-		this.limparTabelaClientes();
-
-		DefaultTableModel model = (DefaultTableModel) tblClientes.getModel();
-
-		for (Cliente c : clientes) {
-			Object[] novaLinhaDaTabela = new Object[5];
-			novaLinhaDaTabela[0] = c.getNome();
-			novaLinhaDaTabela[1] = c.getCpf();
-			novaLinhaDaTabela[2] = c.getEndereco().getEnderecoResumido();
-			novaLinhaDaTabela[3] = c.getTelefones().size();
-			novaLinhaDaTabela[4] = c.isAtivo() ? "Sim" : "Não";
-
-			model.addRow(novaLinhaDaTabela);
+	public PainelCadastroCliente(Cliente clienteParaEditar) {
+		if(clienteParaEditar != null) {
+			this.cliente = clienteParaEditar;
+		}else {
+			this.cliente = new Cliente();
 		}
-	}
-	
-	public PainelCadastroCliente() {
-		this.setLayout(null);
-
-		btnBuscar = new JButton("Buscar (em construção...)");
-		btnBuscar.setBackground(new Color(255, 0, 255));
-		btnBuscar.setForeground(new Color(0, 0, 0));
-		btnBuscar.setEnabled(false);
-		btnBuscar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO descomentar na aula 11
-//				ClienteSeletor seletor = new ClienteSeletor();
-//				seletor.setNome(txtNome.getText());
-//				seletor.setSobrenome(txtSobrenome.getText());
-//				seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
-//				seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
-//				clientes = controller.listarClientes(seletor);
-
-				atualizarTabelaClientes();
-			}
-		});
-		btnBuscar.setBounds(285, 125, 200, 35);
-		this.add(btnBuscar);
-
-		tblClientes = new JTable();
-		this.limparTabelaClientes(); // Adicionei essa linha
-
-		tblClientes.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int indiceSelecionado = tblClientes.getSelectedRow();
-
-				if (indiceSelecionado > 0) {
-					btnEditar.setEnabled(true);
-					btnExcluir.setEnabled(true);
-					clienteSelecionado = clientes.get(indiceSelecionado - 1);
-				} else {
-					btnEditar.setEnabled(false);
-					btnExcluir.setEnabled(true);
-				}
-			}
-		});
-		tblClientes.setBounds(25, 164, 650, 328);
-		this.add(tblClientes);
-
-		lblNome = new JLabel("Nome:");
-		lblNome.setBounds(10, 25, 61, 16);
-		this.add(lblNome);
-
+		
+		setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(47dlu;default)"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
+		
+		lblTitulo = new JLabel(cliente.getId() == null ? "NOVO CLIENTE": "EDIÇÃO DE CLIENTE");
+		lblTitulo.setFont(new Font("Calibri", Font.BOLD, 18));
+		lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
+		add(lblTitulo, "4, 2, 5, 1, center, default");
+		
+		lblNome = new JLabel("Nome");
+		add(lblNome, "4, 4, right, default");
+		
 		txtNome = new JTextField();
-		txtNome.setBounds(160, 20, 240, 28);
-		this.add(txtNome);
+		add(txtNome, "6, 4, 3, 1, fill, default");
 		txtNome.setColumns(10);
-
-		lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(410, 25, 40, 16);
-		this.add(lblCpf);
-
+		
+		lblCpf = new JLabel("CPF");
+		add(lblCpf, "4, 6, right, default");
+		
 		try {
 			mascaraCpf = new MaskFormatter("###.###.###-##");
-			txtCPF = new JFormattedTextField(mascaraCpf);
-			txtCPF.setBounds(450, 19, 120, 28);
-			this.add(txtCPF);
-			txtCPF.setColumns(10);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
+			mascaraCpf.setValueContainsLiteralCharacters(false);
+		} catch (ParseException e) {
+			//silent
 		}
-
-		lblDataNascimentoDe = new JLabel("Data de dascimento. De:");
-		lblDataNascimentoDe.setBounds(10, 60, 154, 10);
-		this.add(lblDataNascimentoDe);
-
-		dtNascimentoInicial = new DatePicker();
-		dtNascimentoInicial.setBounds(160, 55, 450, 30);
-		this.add(dtNascimentoInicial);
-
-		lblAte = new JLabel("Até:");
-		lblAte.setBounds(10, 90, 175, 10);
-		this.add(lblAte);
-
-		dtNascimentoFinal = new DatePicker();
-		dtNascimentoFinal.setBounds(160, 90, 450, 30);
-		this.add(dtNascimentoFinal);
-
-		btnGerarPlanilha = new JButton("Gerar Planilha (Aula 12)");
-		btnGerarPlanilha.setEnabled(false);
-		btnGerarPlanilha.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser janelaSelecaoDestinoArquivo = new JFileChooser();
-				janelaSelecaoDestinoArquivo.setDialogTitle("Selecione um destino para a planilha...");
-
-				int opcaoSelecionada = janelaSelecaoDestinoArquivo.showSaveDialog(null);
-				if (opcaoSelecionada == JFileChooser.APPROVE_OPTION) {
-					String caminhoEscolhido = janelaSelecaoDestinoArquivo.getSelectedFile().getAbsolutePath();
-					//TODO decomentar na aula 11
-					//controller.gerarRelatorio(clientes, caminhoEscolhido);
-				}
-			}
-		});
-		btnGerarPlanilha.setBounds(25, 500, 200, 45);
-		this.add(btnGerarPlanilha);
-
-		btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO exemplo de lógica para edição
-				int linhaSelecionadaNaTabela = tblClientes.getSelectedRow();
-				Cliente clienteSelecionado = clientes.get(linhaSelecionadaNaTabela - 1);
-
-				JOptionPane.showMessageDialog(null, "Chamar a tela de edição e passar o objeto clienteSelecionado...");
-			}
-		});
-		btnEditar.setBounds(250, 500, 200, 45);
-		btnEditar.setEnabled(false);
-		this.add(btnEditar);
 		
-		btnBuscarTodos = new JButton("Buscar todos");
-		btnBuscarTodos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				clientes = (ArrayList<Cliente>) controller.consultarTodos();
-				atualizarTabelaClientes();
-			}
-		});
-		btnBuscarTodos.setBounds(155, 125, 120, 35);
-		this.add(btnBuscarTodos);
+		txtCPF = new JFormattedTextField(mascaraCpf);
+		add(txtCPF, "6, 6, 3, 1, fill, default");
 		
-		btnExcluir = new JButton("Excluir");
-		btnExcluir.setEnabled(false);
-		btnExcluir.setBounds(475, 500, 200, 45);
-		btnExcluir.addActionListener(new ActionListener() {
-			
-			@Override
+		lblEndereco = new JLabel("Endereço");
+		add(lblEndereco, "4, 8, right, default");
+		
+		EnderecoController endController = new EnderecoController();
+		cbEndereco = new JComboBox(endController.consultarTodos().toArray());
+		add(cbEndereco, "6, 8, 3, 1, fill, default");
+		
+		btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int opcaoSelecionada = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do telefone selecionado?");
+				cliente.setNome(txtNome.getText());
 				
-				if(opcaoSelecionada == JOptionPane.YES_OPTION) {
-					try {
-						controller.excluir(clienteSelecionado.getId());
-						JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso");
-						clientes = (ArrayList<Cliente>) controller.consultarTodos();
-						atualizarTabelaClientes();
-					} catch (ClienteComTelefoneException e1) {
-						JOptionPane.showConfirmDialog(null, e1.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
-					}
+				try {
+					String cpfSemMascara = (String) mascaraCpf.stringToValue(
+							txtCPF.getText());
+					cliente.setCpf(cpfSemMascara);
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(null, "Erro ao converter o CPF", 
+							"Erro", JOptionPane.ERROR_MESSAGE); 
+				}
+				cliente.setEndereco((Endereco) cbEndereco.getSelectedItem());
+				
+				ClienteController controller = new ClienteController();
+				try {
+					controller.inserir(cliente);
+					JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!", 
+							"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+				} catch (CpfJaUtilizadoException | EnderecoInvalidoException | CampoInvalidoException excecao) {
+					JOptionPane.showMessageDialog(null, excecao.getMessage(), 
+							"Erro", JOptionPane.ERROR_MESSAGE); 
 				}
 			}
 		});
-		this.add(btnExcluir);
+		add(btnSalvar, "6, 12");
+		
+		
+		btnVoltar = new JButton("Voltar");
+		add(btnVoltar, "8, 12");
+		
+		if(this.cliente.getId() != null) {
+			preencherCamposDaTela();
+		}
 	}
 
+	private void preencherCamposDaTela() {
+		this.txtCPF.setText(this.cliente.getCpf());
+		this.txtNome.setText(this.cliente.getNome());
+		this.cbEndereco.setSelectedItem(this.cliente.getEndereco());
+	}
 }
