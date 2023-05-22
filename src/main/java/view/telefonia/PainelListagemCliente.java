@@ -195,7 +195,7 @@ public class PainelListagemCliente extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int opcaoSelecionada = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do telefone selecionado?");
+				int opcaoSelecionada = JOptionPane.showConfirmDialog(null, "Confirma a exclusão do cliente selecionado?");
 				
 				if(opcaoSelecionada == JOptionPane.YES_OPTION) {
 					try {

@@ -68,8 +68,11 @@ public class MenuTelefonia {
 			public void actionPerformed(ActionEvent e) {
 				painelCadastroCliente = new PainelCadastroCliente(null);
 				painelCadastroCliente.setVisible(true);
+				registrarCliqueBotaoVoltarDoPainelCadastroCliente();
+				
+				//Atualiza a tela principal
 				frmSistemaDeTelefonia.setContentPane(painelCadastroCliente);
-				frmSistemaDeTelefonia.pack();
+				frmSistemaDeTelefonia.revalidate();
 			}
 		});
 		mntmCadastroCliente.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
@@ -80,17 +83,12 @@ public class MenuTelefonia {
 		mntmListarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				painelListagemCliente = new PainelListagemCliente();
-				painelListagemCliente.getBtnEditar().addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						painelCadastroCliente = new PainelCadastroCliente(painelListagemCliente.getClienteSelecionado());
-						painelCadastroCliente.setVisible(true);
-						frmSistemaDeTelefonia.setContentPane(painelCadastroCliente);
-						frmSistemaDeTelefonia.pack();
-					}
-				});
 				painelListagemCliente.setVisible(true);
+				registrarCliqueBotaoEditarDoPainelListagemCliente();
+				
 				frmSistemaDeTelefonia.setContentPane(painelListagemCliente);
+				//Atualiza a tela principal
+				frmSistemaDeTelefonia.revalidate();
 			}
 		});
 		mntmListarCliente.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-menu-do-usuário-male-skin-type-7-20.png")));
@@ -110,6 +108,8 @@ public class MenuTelefonia {
 				//Evento de clique no botão -> instancia o painel e troca
 				PainelListagemTelefone painelListagemTelefone = new PainelListagemTelefone();
 				frmSistemaDeTelefonia.setContentPane(painelListagemTelefone);
+				//Atualiza a tela principal
+				frmSistemaDeTelefonia.revalidate();
 			}
 		});
 		mntmListagemTelefone.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-lista-20.png")));
@@ -139,4 +139,40 @@ public class MenuTelefonia {
 		menuBar.add(mnSobre);
 	}
 
+	protected void registrarCliqueBotaoEditarDoPainelListagemCliente() {
+		//Registro de ouvinte para o clique em um botão de um painel
+		painelListagemCliente.getBtnEditar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				painelCadastroCliente = new PainelCadastroCliente(painelListagemCliente.getClienteSelecionado());
+				painelCadastroCliente.setVisible(true);
+				registrarCliqueBotaoVoltarDoPainelCadastroCliente();
+				
+				//Atualiza a tela principal
+				frmSistemaDeTelefonia.setContentPane(painelCadastroCliente);
+				frmSistemaDeTelefonia.revalidate();
+			}
+		});
+	}
+	
+	protected void registrarCliqueBotaoVoltarDoPainelCadastroCliente() {
+		if(painelCadastroCliente == null) {
+			painelCadastroCliente = new PainelCadastroCliente(null);
+		}
+		
+		//Registrar o evento de clique no voltar do PainelCadastroCliente
+		painelCadastroCliente.getBtnVoltar().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Lógica do clique no botão Voltar
+				//Mostra o painel de listagem de clientes
+				painelListagemCliente = new PainelListagemCliente();
+				painelListagemCliente.setVisible(true);
+				registrarCliqueBotaoEditarDoPainelListagemCliente();
+				frmSistemaDeTelefonia.setContentPane(painelListagemCliente);
+				frmSistemaDeTelefonia.revalidate();
+			}
+		});
+	}
 }

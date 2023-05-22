@@ -147,4 +147,9 @@ public class PainelCadastroCliente extends JPanel {
 		this.txtNome.setText(this.cliente.getNome());
 		this.cbEndereco.setSelectedItem(this.cliente.getEndereco());
 	}
+	
+	//Usado para tornar o btnVoltar acessível externamente (por exemplo, pelo MenuTelefonia)
+	public JButton getBtnVoltar() {
+		return btnVoltar;
+	}
 }
