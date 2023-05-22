@@ -28,21 +28,22 @@ public class TelaListagemEnderecos {
 	//Atributos da tela (componentes visuais)
 	private JFrame frmListagemDeEnderecos;
 	private JTable tblEnderecos;
-	private String[] nomesColunas = { "#", "CEP", "Rua", "Número", "Bairro", "Cidade", "Estado" };
 	private JButton btnBuscar;
 	private JButton btnEditar;
 	private JButton btnExcluir;
 	
-	//Lista para armezenar os endereços consultados no banco
-	private ArrayList<Endereco> enderecos;
 	
 	//Objeto usado para armazenar o endereço que o usuário selecionar na tabela (tblEnderecos)
 	private Endereco enderecoSelecionado;
 	private EnderecoController enderecoController = new EnderecoController();
+	//Lista para armezenar os endereços consultados no banco
+	private ArrayList<Endereco> enderecos;
+	private String[] nomesColunas = { "#", "CEP", "Rua", "Número", "Bairro", "Cidade", "Estado" };
 
 	//Métodos usados no JTable
 	private void limparTabela() {
-		tblEnderecos.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
+		tblEnderecos.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, 
+				nomesColunas));
 	}
 
 	//Chamado sempre no "Buscar"
@@ -56,7 +57,6 @@ public class TelaListagemEnderecos {
 		//Preenche os valores na tabela linha a linha
 		for (Endereco e : enderecos) {
 			Object[] novaLinhaDaTabela = new Object[7];
-			
 			novaLinhaDaTabela[0] = e.getId();
 			novaLinhaDaTabela[1] = e.getCep();
 			novaLinhaDaTabela[2] = e.getRua();
@@ -64,7 +64,6 @@ public class TelaListagemEnderecos {
 			novaLinhaDaTabela[4] = e.getBairro();
 			novaLinhaDaTabela[5] = e.getCidade();
 			novaLinhaDaTabela[6] = e.getEstado();
-
 			model.addRow(novaLinhaDaTabela);
 		}
 	}

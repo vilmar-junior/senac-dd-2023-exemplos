@@ -159,9 +159,11 @@ public class TelaCadastroEnderecoVersaoNoturna extends JFrame {
 				
 				String cepInformado = "";
 				try {
+					//Obtém valor do CEP sem a máscara
 					cepInformado = (String) mascaraCep.stringToValue(txtCep.getText());
 				} catch (ParseException e1) {
 					//silent
+					JOptionPane.showMessageDialog(null, "Erro ao converter o CEP informado");
 				}
 				novoEndereco.setCep(cepInformado);
 				novoEndereco.setNumero(txtNumero.getText());
