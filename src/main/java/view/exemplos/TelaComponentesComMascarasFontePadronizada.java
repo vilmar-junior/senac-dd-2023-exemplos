@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
@@ -20,7 +21,7 @@ import javax.swing.text.MaskFormatter;
  * @author Vilmar César Pereira Júnior
  * FONTE: https://docs.oracle.com/javase/7/docs/api/javax/swing/text/MaskFormatter.html
  */
-public class TelaComponentesComMascaras extends JFrame {
+public class TelaComponentesComMascarasFontePadronizada extends JFrame {
 
 	private static final long serialVersionUID = -4148728762222132202L;
 	private JPanel contentPane;
@@ -44,6 +45,18 @@ public class TelaComponentesComMascaras extends JFrame {
 	private MaskFormatter mascaraPlaca;
 	private MaskFormatter mascaraCep;
 
+	//Altera a fonte de toda a aplicação
+	public static void setUIFont (java.awt.Font f){
+		//FONTE: https://stackoverflow.com/questions/30479695/how-to-change-fonts-of-all-components
+	    java.util.Enumeration keys = UIManager.getDefaults().keys();
+	    while (keys.hasMoreElements()) {
+	      Object key = keys.nextElement();
+	      Object value = UIManager.get (key);
+	      if (value != null && value instanceof java.awt.Font)
+	        UIManager.put (key, f);
+	      }
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -51,7 +64,7 @@ public class TelaComponentesComMascaras extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaComponentesComMascaras frame = new TelaComponentesComMascaras();
+					TelaComponentesComMascarasFontePadronizada frame = new TelaComponentesComMascarasFontePadronizada();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +76,10 @@ public class TelaComponentesComMascaras extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TelaComponentesComMascaras() {
+	public TelaComponentesComMascarasFontePadronizada() {
+		//Altera a fonte de toda a aplicação
+		setUIFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 12));
+		
 		setTitle("Exemplos de Máscaras");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 400);

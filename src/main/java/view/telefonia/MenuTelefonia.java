@@ -1,20 +1,24 @@
 package view.telefonia;
 
+import java.awt.ComponentOrientation;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.ParseException;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 public class MenuTelefonia {
 
@@ -39,6 +43,18 @@ public class MenuTelefonia {
 			}
 		});
 	}
+	
+	//Altera a fonte de toda a aplicação
+	public static void setUIFont (java.awt.Font f){
+		//FONTE: https://stackoverflow.com/questions/30479695/how-to-change-fonts-of-all-components
+	    java.util.Enumeration keys = UIManager.getDefaults().keys();
+	    while (keys.hasMoreElements()) {
+	      Object key = keys.nextElement();
+	      Object value = UIManager.get (key);
+	      if (value != null && value instanceof java.awt.Font)
+	        UIManager.put (key, f);
+	      }
+	}
 
 	/**
 	 * Create the application.
@@ -51,12 +67,16 @@ public class MenuTelefonia {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//Altera a fonte de toda a aplicação
+		setUIFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 12));
 		frmSistemaDeTelefonia = new JFrame();
 		frmSistemaDeTelefonia.setTitle("Sistema de Telefonia");
-		frmSistemaDeTelefonia.setBounds(100, 100, 450, 300);
+		frmSistemaDeTelefonia.setBounds(100, 100, 579, 300);
 		frmSistemaDeTelefonia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
+		//Como alterar a orientação da barra de menus
+		//menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		frmSistemaDeTelefonia.setJMenuBar(menuBar);
 		
 		JMenu mnCliente = new JMenu("Cliente");
