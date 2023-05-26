@@ -109,7 +109,7 @@ public class PainelListagemCliente extends JPanel {
 					clienteSelecionado = clientes.get(indiceSelecionado - 1);
 				} else {
 					btnEditar.setEnabled(false);
-					btnExcluir.setEnabled(true);
+					btnExcluir.setEnabled(false);
 				}
 			}
 		});
