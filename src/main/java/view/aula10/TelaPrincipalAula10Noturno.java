@@ -16,7 +16,7 @@ import view.aula10.paineis.PainelVerde;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class TelaPrincipalAula10 extends JFrame {
+public class TelaPrincipalAula10Noturno extends JFrame {
 
 	private JPanel contentPane;
 	
@@ -31,7 +31,7 @@ public class TelaPrincipalAula10 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaPrincipalAula10 frame = new TelaPrincipalAula10();
+					TelaPrincipalAula10Noturno frame = new TelaPrincipalAula10Noturno();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +43,7 @@ public class TelaPrincipalAula10 extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TelaPrincipalAula10() {
+	public TelaPrincipalAula10Noturno() {
 		setTitle("Tela Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -60,7 +60,7 @@ public class TelaPrincipalAula10 extends JFrame {
 		contentPane.setLayout(null);
 		
 		JMenu menuRelatorios = new JMenu("Relatórios");
-		menuRelatorios.setIcon(new ImageIcon(TelaPrincipalAula10.class.getResource("/icones/icons8-gráfico-combinado.png")));
+		menuRelatorios.setIcon(new ImageIcon(TelaPrincipalAula10Noturno.class.getResource("/icones/icons8-gráfico-combinado.png")));
 		menuBarCerta.add(menuRelatorios);
 		
 		JMenuItem mntmRelatorioVerde = new JMenuItem("Relatório Verde");
@@ -71,15 +71,30 @@ public class TelaPrincipalAula10 extends JFrame {
 				revalidate();
 			}
 		});
-		mntmRelatorioVerde.setIcon(new ImageIcon(TelaPrincipalAula10.class.getResource("/icones/icons8-mais-20.png")));
+		mntmRelatorioVerde.setIcon(new ImageIcon(TelaPrincipalAula10Noturno.class.getResource("/icones/icons8-mais-20.png")));
 		menuRelatorios.add(mntmRelatorioVerde);
 		
 		JMenuItem mntmRelatorioAzul = new JMenuItem("Relatório Azul");
-		mntmRelatorioAzul.setIcon(new ImageIcon(TelaPrincipalAula10.class.getResource("/icones/icons8-lista-20.png")));
+		mntmRelatorioAzul.setIcon(new ImageIcon(TelaPrincipalAula10Noturno.class.getResource("/icones/icons8-lista-20.png")));
 		menuRelatorios.add(mntmRelatorioAzul);
 		mntmRelatorioAzul.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				painelAzul = new PainelAzul();
+				
+				//Registra o evento de clique no botão btnGerarRelatorioAzul do PainelAzul
+				painelAzul.getBtnGerarRelatorioAzul().addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						//"Gerar o relatório" --> chamar um controller para isso
+						
+						//Trocar para o painel amarelo
+						painelAmarelo = new PainelAmarelo();
+						setContentPane(painelAmarelo);
+						revalidate();
+					}
+				});
+				
 				setContentPane(painelAzul);
 				revalidate();
 			}

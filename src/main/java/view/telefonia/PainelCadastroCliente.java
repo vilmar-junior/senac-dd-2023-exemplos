@@ -8,6 +8,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import controller.ClienteController;
 import controller.EnderecoController;
 import model.exception.CampoInvalidoException;
+import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Cliente;
@@ -122,10 +123,20 @@ public class PainelCadastroCliente extends JPanel {
 				
 				ClienteController controller = new ClienteController();
 				try {
-					controller.inserir(cliente);
-					JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!", 
-							"Sucesso", JOptionPane.INFORMATION_MESSAGE);
-				} catch (CpfJaUtilizadoException | EnderecoInvalidoException | CampoInvalidoException excecao) {
+					if(cliente.getId() == null) {
+						controller.inserir(cliente);
+						JOptionPane.showMessageDialog(null, "Cliente SALVO com sucesso!", 
+								"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						controller.atualizar(cliente);
+						JOptionPane.showMessageDialog(null, "Cliente ATUALIZADO com sucesso!", 
+								"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+					}
+				} catch (CpfJaUtilizadoException 
+							| EnderecoInvalidoException 
+							| CampoInvalidoException 
+							| CpfAlteradoException excecao) {
 					JOptionPane.showMessageDialog(null, excecao.getMessage(), 
 							"Erro", JOptionPane.ERROR_MESSAGE); 
 				}

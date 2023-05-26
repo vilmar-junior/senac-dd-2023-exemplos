@@ -46,14 +46,14 @@ public class TelaComponentesComMascarasFontePadronizada extends JFrame {
 	private MaskFormatter mascaraCep;
 
 	//Altera a fonte de toda a aplicação
-	public static void setUIFont (java.awt.Font f){
+	public static void setUIFont (java.awt.Font novaFonte){
 		//FONTE: https://stackoverflow.com/questions/30479695/how-to-change-fonts-of-all-components
 	    java.util.Enumeration keys = UIManager.getDefaults().keys();
 	    while (keys.hasMoreElements()) {
 	      Object key = keys.nextElement();
 	      Object value = UIManager.get (key);
 	      if (value != null && value instanceof java.awt.Font)
-	        UIManager.put (key, f);
+	        UIManager.put(key, novaFonte);
 	      }
 	}
 	
