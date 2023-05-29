@@ -93,4 +93,8 @@ public class ClienteBO {
 			throw new EnderecoInvalidoException("Endereço não informado");
 		}
 	}
+	
+	public int contarTotalRegistrosComFiltros(ClienteSeletor seletor) {
+		return dao.contarTotalRegistrosComFiltros(seletor);
+	}
 }

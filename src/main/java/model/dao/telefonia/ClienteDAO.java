@@ -17,15 +17,15 @@ public class ClienteDAO {
 	
 	public Cliente inserir(Cliente novoCliente) {
 		Connection conexao = Banco.getConnection();
-		String sql = " INSERT INTO CLIENTE(NOME, CPF, ID_ENDERECO, ATIVO) "
-				+ " VALUES (?,?,?,?) ";
+		String sql = " INSERT INTO CLIENTE(NOME, CPF, DT_NASCIMENTO, ID_ENDERECO, ATIVO) "
+				+ " VALUES (?,?,?,?,?) ";
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		try {
 			stmt.setString(1, novoCliente.getNome());
 			stmt.setString(2, novoCliente.getCpf());
-			stmt.setInt(3, novoCliente.getEndereco().getId());
-			stmt.setBoolean(4, novoCliente.isAtivo());
-			//stmt.setDate(5, java.sql.Date.valueOf(novoCliente.getDataNascimento()));
+			stmt.setDate(3, java.sql.Date.valueOf(novoCliente.getDataNascimento()));
+			stmt.setInt(4, novoCliente.getEndereco().getId());
+			stmt.setBoolean(5, novoCliente.isAtivo());
 			stmt.execute();
 			
 			//Preencher o id gerado no banco no objeto
@@ -49,16 +49,18 @@ public class ClienteDAO {
 	
 	public boolean atualizar(Cliente cliente) {
 		Connection conexao = Banco.getConnection();
-		String sql = " UPDATE CLIENTE SET NOME=?, CPF=?, ID_ENDERECO=?, ATIVO=? "
+		String sql = " UPDATE CLIENTE SET NOME=?, CPF=?, DT_NASCIMENTO=?, "
+				+ " ID_ENDERECO=?, ATIVO=? "
 				+ " WHERE ID = ?";
 		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 		int registrosAlterados = 0;
 		try {
 			stmt.setString(1, cliente.getNome());
 			stmt.setString(2, cliente.getCpf());
-			stmt.setInt(3, cliente.getEndereco().getId());
-			stmt.setBoolean(4, cliente.isAtivo());
-			stmt.setInt(5, cliente.getId());
+			stmt.setDate(3, java.sql.Date.valueOf(cliente.getDataNascimento()));
+			stmt.setInt(4, cliente.getEndereco().getId());
+			stmt.setBoolean(5, cliente.isAtivo());
+			stmt.setInt(6, cliente.getId());
 			registrosAlterados = stmt.executeUpdate();
 			 
 			TelefoneDAO telefoneDAO = new TelefoneDAO(); 
@@ -150,6 +152,7 @@ public class ClienteDAO {
 		clienteBuscado.setId(resultado.getInt("id"));
 		clienteBuscado.setNome(resultado.getString("nome"));
 		clienteBuscado.setCpf(resultado.getString("cpf"));
+		clienteBuscado.setDataNascimento(resultado.getDate("dt_nascimento").toLocalDate());
 		clienteBuscado.setAtivo(resultado.getBoolean("ativo"));
 		
 		int idEnderecoDoCliente = resultado.getInt("id_endereco");
@@ -222,6 +225,11 @@ public class ClienteDAO {
 			sql = preencherFiltros(sql, seletor);
 		}
 		
+		if(seletor.temPaginacao()) {
+			sql += " LIMIT "  + seletor.getLimite()
+				 + " OFFSET " + seletor.getOffset();  
+		}
+		
 		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
 		try {
 			ResultSet resultado = query.executeQuery();
@@ -265,18 +273,69 @@ public class ClienteDAO {
 			primeiro = false;
 		}
 		
-		//TODO incluirDataNascimento
-//		if(seletor.getDataNascimentoInicial() != null) {
-//			if(primeiro) {
-//				sql += " WHERE ";
-//			} else {
-//				sql += " AND ";
-//			}
-//			sql += " dataNascimento LIKE '%" + seletor.getCpf() + "%'";
-//			primeiro = false;
-//		}
+		if(seletor.getDataNascimentoInicial() != null
+			&& seletor.getDataNascimentoFinal() != null) {
+			if(primeiro) {
+				sql += " WHERE ";
+			} else {
+				sql += " AND ";
+			}
+			sql += " DT_NASCIMENTO BETWEEN '" 
+				+ seletor.getDataNascimentoInicial() + "' " 
+				+ " AND '" + seletor.getDataNascimentoFinal() + "' ";
+			primeiro = false;
+		} else {
+			if (seletor.getDataNascimentoInicial() != null) {
+				if(primeiro) {
+					sql += " WHERE ";
+				} else {
+					sql += " AND ";
+				}
+				//CLIENTES QUE NASCERAM 'A PARTIR' DA DATA INICIAL
+				sql += " DT_NASCIMENTO >= '" + seletor.getDataNascimentoInicial() + "' "; 
+				primeiro = false;
+			}
+			
+			if (seletor.getDataNascimentoFinal() != null) {
+				if(primeiro) {
+					sql += " WHERE ";
+				} else {
+					sql += " AND ";
+				}
+				//CLIENTES QUE NASCERAM 'ATÉ' A DATA FINAL
+				sql += " DT_NASCIMENTO <= '" + seletor.getDataNascimentoFinal() + "' "; 
+				primeiro = false;
+			}
+		}
 		
 		return sql;
+	}
+	
+	public int contarTotalRegistrosComFiltros(ClienteSeletor seletor) {
+		int total = 0;
+		Connection conexao = Banco.getConnection();
+		String sql = " select count(*) from cliente ";
+		
+		if(seletor.temFiltro()) {
+			sql = preencherFiltros(sql, seletor);
+		}
+		
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			ResultSet resultado = query.executeQuery();
+			
+			if(resultado.next()) {
+				total = resultado.getInt(1);
+			}
+		}catch (Exception e) {
+			System.out.println("Erro contar o total de clientes" 
+					+ "\n Causa:" + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		return total;
 	}
 }
 

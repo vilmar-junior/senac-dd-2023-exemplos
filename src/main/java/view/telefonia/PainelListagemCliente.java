@@ -27,6 +27,7 @@ import controller.ClienteController;
 import model.exception.ClienteComTelefoneException;
 import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
+import javax.swing.SwingConstants;
 
 public class PainelListagemCliente extends JPanel {
 	private JTable tblClientes;
@@ -47,9 +48,18 @@ public class PainelListagemCliente extends JPanel {
 	private JLabel lblNome;
 	private JLabel lblDataNascimentoDe;
 	private JLabel lblAte;
+	private JLabel lblPaginacao;
 	
 	private ClienteController controller = new ClienteController();
 	private Cliente clienteSelecionado;
+	
+	//Atributos para a PAGINAÇÃO
+	private final int TAMANHO_PAGINA = 5;
+	private int paginaAtual = 1;
+	private int totalPaginas = 0;
+	private JButton btnVoltarPagina;
+	private JButton btnAvancarPagina;
+	private ClienteSeletor seletor = new ClienteSeletor();
 	
 	private void limparTabelaClientes() {
 		tblClientes.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
@@ -80,27 +90,11 @@ public class PainelListagemCliente extends JPanel {
 		btnBuscar.setForeground(new Color(0, 0, 0));
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ClienteSeletor seletor = new ClienteSeletor();
-				seletor.setNome(txtNome.getText());
-				
-				String cpfSemMascara;
-				try {
-					cpfSemMascara = (String) mascaraCpf.stringToValue(
-							txtCPF.getText());
-					seletor.setCpf(cpfSemMascara);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
-				seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
-				clientes = (ArrayList<Cliente>) controller.consultarComFiltros(seletor);
-
+				buscarClientesComFiltros();
 				atualizarTabelaClientes();
 			}
 		});
-		btnBuscar.setBounds(160, 125, 450, 35);
+		btnBuscar.setBounds(160, 125, 515, 35);
 		this.add(btnBuscar);
 
 		tblClientes = new JTable();
@@ -121,7 +115,7 @@ public class PainelListagemCliente extends JPanel {
 				}
 			}
 		});
-		tblClientes.setBounds(25, 164, 650, 328);
+		tblClientes.setBounds(25, 164, 650, 133);
 		this.add(tblClientes);
 
 		lblNome = new JLabel("Nome:");
@@ -153,7 +147,7 @@ public class PainelListagemCliente extends JPanel {
 		this.add(lblDataNascimentoDe);
 
 		dtNascimentoInicial = new DatePicker();
-		dtNascimentoInicial.setBounds(160, 55, 450, 30);
+		dtNascimentoInicial.setBounds(160, 55, 515, 30);
 		this.add(dtNascimentoInicial);
 
 		lblAte = new JLabel("Até:");
@@ -161,7 +155,7 @@ public class PainelListagemCliente extends JPanel {
 		this.add(lblAte);
 
 		dtNascimentoFinal = new DatePicker();
-		dtNascimentoFinal.setBounds(160, 90, 450, 30);
+		dtNascimentoFinal.setBounds(160, 90, 515, 30);
 		this.add(dtNascimentoFinal);
 
 		btnGerarPlanilha = new JButton("Gerar Planilha (Aula 12)");
@@ -179,17 +173,17 @@ public class PainelListagemCliente extends JPanel {
 				}
 			}
 		});
-		btnGerarPlanilha.setBounds(25, 500, 200, 45);
+		btnGerarPlanilha.setBounds(25, 375, 200, 45);
 		this.add(btnGerarPlanilha);
 
 		btnEditar = new JButton("Editar");
-		btnEditar.setBounds(250, 500, 200, 45);
+		btnEditar.setBounds(250, 375, 200, 45);
 		btnEditar.setEnabled(false);
 		this.add(btnEditar);
 		
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setEnabled(false);
-		btnExcluir.setBounds(475, 500, 200, 45);
+		btnExcluir.setBounds(475, 375, 200, 45);
 		btnExcluir.addActionListener(new ActionListener() {
 			
 			@Override
@@ -209,8 +203,80 @@ public class PainelListagemCliente extends JPanel {
 			}
 		});
 		this.add(btnExcluir);
+		
+		btnVoltarPagina = new JButton("<< Voltar");
+		btnVoltarPagina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				paginaAtual--;
+				buscarClientesComFiltros();
+				lblPaginacao.setText(paginaAtual + " / " + totalPaginas);
+				btnVoltarPagina.setEnabled(paginaAtual > 1);
+				btnAvancarPagina.setEnabled(paginaAtual < totalPaginas);
+			}
+		});
+		btnVoltarPagina.setEnabled(false);
+		btnVoltarPagina.setBounds(175, 319, 111, 23);
+		add(btnVoltarPagina);
+		
+		btnAvancarPagina = new JButton("Avançar >>");
+		btnAvancarPagina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				paginaAtual++;
+				buscarClientesComFiltros();
+				lblPaginacao.setText(paginaAtual + " / " + totalPaginas);
+				btnVoltarPagina.setEnabled(paginaAtual > 1);
+				btnAvancarPagina.setEnabled(paginaAtual < totalPaginas);
+			}
+		});
+		btnAvancarPagina.setBounds(386, 319, 111, 23);
+		add(btnAvancarPagina);
+		
+		lblPaginacao = new JLabel("1 / " + totalPaginas);
+		lblPaginacao.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPaginacao.setBounds(283, 323, 105, 14);
+		add(lblPaginacao);
+		
+		atualizarQuantidadePaginas();
 	}
 	
+	private void atualizarQuantidadePaginas() {
+		//Cálculo do total de páginas (poderia ser feito no backend)
+		int totalRegistros = controller.contarTotalRegistrosComFiltros(seletor);
+		
+		//QUOCIENTE da divisão inteira
+		totalPaginas = totalRegistros / TAMANHO_PAGINA;
+		
+		//RESTO da divisão inteira
+		if(totalRegistros % TAMANHO_PAGINA > 0) { 
+			totalPaginas++;
+		}
+		
+		lblPaginacao.setText(paginaAtual + " / " + totalPaginas);
+	}
+
+	protected void buscarClientesComFiltros() {
+		seletor = new ClienteSeletor();
+		seletor.setLimite(TAMANHO_PAGINA);
+		seletor.setPagina(paginaAtual);
+		seletor.setNome(txtNome.getText());
+		
+		String cpfSemMascara;
+		try {
+			cpfSemMascara = (String) mascaraCpf.stringToValue(
+					txtCPF.getText());
+			seletor.setCpf(cpfSemMascara);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();
+		}
+		
+		seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
+		seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
+		clientes = (ArrayList<Cliente>) controller.consultarComFiltros(seletor);
+		atualizarTabelaClientes();
+		atualizarQuantidadePaginas();
+	}
+
 	//Torna o btnEditar acessível externamente à essa classe
 	public JButton getBtnEditar() {
 		return this.btnEditar;

@@ -1,5 +1,6 @@
 package model.vo.telefonia;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class Cliente {
 	private Integer id;
 	private String nome;
 	private String cpf;
-	//TODO incluir dataNascimento
+	private LocalDate dataNascimento;
 	private List<Telefone> telefones;
 	private boolean ativo;
 	private Endereco endereco;
@@ -17,11 +18,12 @@ public class Cliente {
 		this.telefones = new ArrayList<>();
 	}
 	
-	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+	public Cliente(Integer id, String nome, String cpf, LocalDate dataNascimento, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
 		this.telefones = telefones;
 		this.ativo = ativo;
 		this.endereco = endereco;
@@ -29,15 +31,15 @@ public class Cliente {
 
 
 
-	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+	public Cliente(String nome, String cpf, LocalDate dataNascimento, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
 		this.telefones = telefones;
 		this.ativo = ativo;
 		this.endereco = endereco;
 	}
-	
 
 	public Integer getId() {
 		return id;
@@ -87,9 +89,16 @@ public class Cliente {
 		this.endereco = endereco;
 	}
 
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	
 	@Override
 	public String toString() {
 		return nome + " (" + cpf + ")";
 	}
-	
 }

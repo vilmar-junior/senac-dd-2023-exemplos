@@ -35,3 +35,7 @@ CREATE TABLE `exemplos`.`endereco` (
     REFERENCES `exemplos`.`endereco` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+--v2
+ALTER TABLE `exemplos`.`cliente` 
+ADD COLUMN `DT_NASCIMENTO` DATE NULL AFTER `ID_ENDERECO`;
