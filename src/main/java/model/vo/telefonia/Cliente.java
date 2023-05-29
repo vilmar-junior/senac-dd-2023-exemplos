@@ -8,6 +8,7 @@ public class Cliente {
 	private Integer id;
 	private String nome;
 	private String cpf;
+	//TODO incluir dataNascimento
 	private List<Telefone> telefones;
 	private boolean ativo;
 	private Endereco endereco;

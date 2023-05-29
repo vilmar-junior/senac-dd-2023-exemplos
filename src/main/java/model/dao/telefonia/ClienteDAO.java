@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.Banco;
+import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Endereco;
 
@@ -211,4 +212,73 @@ public class ClienteDAO {
 		
 		return totalClientesDoEnderecoBuscado;
 	}
+
+	public List<Cliente> consultarComFiltros(ClienteSeletor seletor) {
+		List<Cliente> clientes = new ArrayList<Cliente>();
+		Connection conexao = Banco.getConnection();
+		String sql = " select * from cliente ";
+		
+		if(seletor.temFiltro()) {
+			sql = preencherFiltros(sql, seletor);
+		}
+		
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			ResultSet resultado = query.executeQuery();
+			
+			while(resultado.next()) {
+				Cliente clienteBuscado = montarClienteComResultadoDoBanco(resultado);
+				clientes.add(clienteBuscado);
+			}
+			
+		}catch (Exception e) {
+			System.out.println("Erro ao buscar todos os clientes. \n Causa:" + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		return clientes;
+	}
+
+	private String preencherFiltros(String sql, ClienteSeletor seletor) {
+		
+		boolean primeiro = true;
+		if(seletor.getNome() != null && !seletor.getNome().trim().isEmpty()) {
+			if(primeiro) {
+				sql += " WHERE ";
+			} else {
+				sql += " AND ";
+			}
+			
+			sql += " nome LIKE '%" + seletor.getNome() + "%'";
+			primeiro = false;
+		}
+		
+		if(seletor.getCpf() != null && !seletor.getCpf().trim().isEmpty()) {
+			if(primeiro) {
+				sql += " WHERE ";
+			} else {
+				sql += " AND ";
+			}
+			sql += " cpf LIKE '%" + seletor.getCpf() + "%'";
+			primeiro = false;
+		}
+		
+		//TODO incluirDataNascimento
+//		if(seletor.getDataNascimentoInicial() != null) {
+//			if(primeiro) {
+//				sql += " WHERE ";
+//			} else {
+//				sql += " AND ";
+//			}
+//			sql += " dataNascimento LIKE '%" + seletor.getCpf() + "%'";
+//			primeiro = false;
+//		}
+		
+		return sql;
+	}
 }
+
+
+

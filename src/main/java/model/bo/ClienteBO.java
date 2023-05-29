@@ -8,6 +8,7 @@ import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
+import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Telefone;
 
@@ -78,6 +79,12 @@ public class ClienteBO {
 	
 	public List<Cliente> consultarTodos() {
 		return dao.consultarTodos();
+	}
+	
+	public List<Cliente> consultarComFiltros(ClienteSeletor seletor) {
+		//TODO validar CPF e as datas informadas
+		
+		return dao.consultarComFiltros(seletor);
 	}
 	
 	private void validarEndereco(Cliente cliente) throws EnderecoInvalidoException {

@@ -8,6 +8,7 @@ import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
+import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 
 public class ClienteController {
@@ -80,4 +81,11 @@ public class ClienteController {
 	public List<Cliente> consultarTodos() {
 		return bo.consultarTodos();
 	}
+	
+	public List<Cliente> consultarComFiltros(ClienteSeletor seletor) {
+		return bo.consultarComFiltros(seletor);
+	}
+	
+	
+	
 }

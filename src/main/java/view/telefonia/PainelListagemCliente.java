@@ -25,6 +25,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 
 import controller.ClienteController;
 import model.exception.ClienteComTelefoneException;
+import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 
 public class PainelListagemCliente extends JPanel {
@@ -40,7 +41,6 @@ public class PainelListagemCliente extends JPanel {
 	private DatePicker dtNascimentoFinal;
 	private JButton btnEditar;
 	private JButton btnBuscar;
-	private JButton btnBuscarTodos;
 	private JButton btnGerarPlanilha;
 	private JButton btnExcluir;
 	private JLabel lblCpf;
@@ -75,24 +75,32 @@ public class PainelListagemCliente extends JPanel {
 	public PainelListagemCliente() {
 		this.setLayout(null);
 
-		btnBuscar = new JButton("Buscar (em construção...)");
-		btnBuscar.setBackground(new Color(255, 0, 255));
+		btnBuscar = new JButton("Buscar COM FILTROS");
+		btnBuscar.setBackground(new Color(255, 128, 192));
 		btnBuscar.setForeground(new Color(0, 0, 0));
-		btnBuscar.setEnabled(false);
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO descomentar na aula 11
-//				ClienteSeletor seletor = new ClienteSeletor();
-//				seletor.setNome(txtNome.getText());
-//				seletor.setSobrenome(txtSobrenome.getText());
-//				seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
-//				seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
-//				clientes = controller.listarClientes(seletor);
+				ClienteSeletor seletor = new ClienteSeletor();
+				seletor.setNome(txtNome.getText());
+				
+				String cpfSemMascara;
+				try {
+					cpfSemMascara = (String) mascaraCpf.stringToValue(
+							txtCPF.getText());
+					seletor.setCpf(cpfSemMascara);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				seletor.setDataNascimentoInicial(dtNascimentoInicial.getDate());
+				seletor.setDataNascimentoFinal(dtNascimentoFinal.getDate());
+				clientes = (ArrayList<Cliente>) controller.consultarComFiltros(seletor);
 
 				atualizarTabelaClientes();
 			}
 		});
-		btnBuscar.setBounds(285, 125, 200, 35);
+		btnBuscar.setBounds(160, 125, 450, 35);
 		this.add(btnBuscar);
 
 		tblClientes = new JTable();
@@ -131,6 +139,7 @@ public class PainelListagemCliente extends JPanel {
 
 		try {
 			mascaraCpf = new MaskFormatter("###.###.###-##");
+			mascaraCpf.setValueContainsLiteralCharacters(false);
 			txtCPF = new JFormattedTextField(mascaraCpf);
 			txtCPF.setBounds(450, 19, 120, 28);
 			this.add(txtCPF);
@@ -177,16 +186,6 @@ public class PainelListagemCliente extends JPanel {
 		btnEditar.setBounds(250, 500, 200, 45);
 		btnEditar.setEnabled(false);
 		this.add(btnEditar);
-		
-		btnBuscarTodos = new JButton("Buscar todos");
-		btnBuscarTodos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				clientes = (ArrayList<Cliente>) controller.consultarTodos();
-				atualizarTabelaClientes();
-			}
-		});
-		btnBuscarTodos.setBounds(155, 125, 120, 35);
-		this.add(btnBuscarTodos);
 		
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setEnabled(false);
