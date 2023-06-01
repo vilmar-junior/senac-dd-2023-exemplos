@@ -20,12 +20,13 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import model.bo.ClienteBO;
+
 public class MenuTelefonia {
 
 	private JFrame frmSistemaDeTelefonia;
-	private PainelListagemCliente painelListagemCliente;
-	private PainelCadastroCliente painelCadastroCliente;
-
+	private Jframe painelListagemClienteAlteradoPeloRenan;
+	private painelCadastro;
 	/**
 	 * Launch the application.
 	 */
