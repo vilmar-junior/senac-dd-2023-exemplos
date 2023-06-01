@@ -1,14 +1,11 @@
 package view.telefonia;
 
-import java.awt.ComponentOrientation;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,15 +15,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
-import javax.swing.plaf.FontUIResource;
 
 import model.bo.ClienteBO;
 
 public class MenuTelefonia {
 
 	private JFrame frmSistemaDeTelefonia;
-	private Jframe painelListagemClienteAlteradoPeloRenan;
-	private painelCadastro;
+	private PainelListagemCliente painelListagemClienteNomeAlteradoPeloVilmar;
+	private PainelCadastroCliente painelCadastroCliente;
+
 	/**
 	 * Launch the application.
 	 */
@@ -103,11 +100,11 @@ public class MenuTelefonia {
 		JMenuItem mntmListarCliente = new JMenuItem("Listagem");
 		mntmListarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				painelListagemCliente = new PainelListagemCliente();
-				painelListagemCliente.setVisible(true);
+				painelListagemClienteNomeAlteradoPeloVilmar = new PainelListagemCliente();
+				painelListagemClienteNomeAlteradoPeloVilmar.setVisible(true);
 				registrarCliqueBotaoEditarDoPainelListagemCliente();
 				
-				frmSistemaDeTelefonia.setContentPane(painelListagemCliente);
+				frmSistemaDeTelefonia.setContentPane(painelListagemClienteNomeAlteradoPeloVilmar);
 				//Atualiza a tela principal
 				frmSistemaDeTelefonia.revalidate();
 			}
@@ -162,10 +159,10 @@ public class MenuTelefonia {
 
 	protected void registrarCliqueBotaoEditarDoPainelListagemCliente() {
 		//Registro de ouvinte para o clique em um botão de um painel
-		painelListagemCliente.getBtnEditar().addActionListener(new ActionListener() {
+		painelListagemClienteNomeAlteradoPeloVilmar.getBtnEditar().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				painelCadastroCliente = new PainelCadastroCliente(painelListagemCliente.getClienteSelecionado());
+				painelCadastroCliente = new PainelCadastroCliente(painelListagemClienteNomeAlteradoPeloVilmar.getClienteSelecionado());
 				painelCadastroCliente.setVisible(true);
 				registrarCliqueBotaoVoltarDoPainelCadastroCliente();
 				
@@ -188,10 +185,10 @@ public class MenuTelefonia {
 			public void actionPerformed(ActionEvent e) {
 				//Lógica do clique no botão Voltar
 				//Mostra o painel de listagem de clientes
-				painelListagemCliente = new PainelListagemCliente();
-				painelListagemCliente.setVisible(true);
+				painelListagemClienteNomeAlteradoPeloVilmar = new PainelListagemCliente();
+				painelListagemClienteNomeAlteradoPeloVilmar.setVisible(true);
 				registrarCliqueBotaoEditarDoPainelListagemCliente();
-				frmSistemaDeTelefonia.setContentPane(painelListagemCliente);
+				frmSistemaDeTelefonia.setContentPane(painelListagemClienteNomeAlteradoPeloVilmar);
 				frmSistemaDeTelefonia.revalidate();
 			}
 		});
