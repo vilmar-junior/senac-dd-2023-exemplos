@@ -25,8 +25,8 @@ public class ExecutavelTelefonia {
 		ClienteController controladorDeClientes = new ClienteController();
 		
 		Cliente novoCliente = new Cliente();
-		novoCliente.setNome("Mário");
-		novoCliente.setCpf("19122233312");
+		novoCliente.setNome("Mário Neto Filho Zico");
+		novoCliente.setCpf("191222333142342342342342");
 		novoCliente.setEndereco(endereco1);
 		novoCliente.setAtivo(true);
 		novoCliente.setTelefones(new ArrayList());

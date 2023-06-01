@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
+import model.bo.ClienteBO;
+
 public class MenuTelefonia {
 
 	private JFrame frmSistemaDeTelefonia;
