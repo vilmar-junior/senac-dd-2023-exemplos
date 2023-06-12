@@ -8,6 +8,7 @@ import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
+import model.gerador.GeradorPlanilha;
 import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 
@@ -88,5 +89,15 @@ public class ClienteController {
 	
 	public int contarTotalRegistrosComFiltros(ClienteSeletor seletor) {
 		return bo.contarTotalRegistrosComFiltros(seletor);
+	}
+	
+	public String gerarPlanilha(List<Cliente> clientes, String destinoArquivo) throws CampoInvalidoException {
+		
+		if(clientes == null || destinoArquivo == null || destinoArquivo.trim().isEmpty()) {
+			throw new CampoInvalidoException("Preencha todos os campos");
+		}
+		
+		GeradorPlanilha gerador = new GeradorPlanilha();
+		return gerador.gerarPlanilhaClientes(clientes, destinoArquivo);
 	}
 }

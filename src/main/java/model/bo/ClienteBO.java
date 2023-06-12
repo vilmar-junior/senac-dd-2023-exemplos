@@ -8,6 +8,7 @@ import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
+import model.gerador.GeradorPlanilha;
 import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Telefone;
@@ -96,5 +97,10 @@ public class ClienteBO {
 	
 	public int contarTotalRegistrosComFiltros(ClienteSeletor seletor) {
 		return dao.contarTotalRegistrosComFiltros(seletor);
+	}
+	
+	public String gerarPlanilha(List<Cliente> clientes, String destinoArquivo) {
+		GeradorPlanilha gerador = new GeradorPlanilha();
+		return gerador.gerarPlanilhaClientes(clientes, destinoArquivo);
 	}
 }
