@@ -24,6 +24,7 @@ import javax.swing.text.MaskFormatter;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import controller.ClienteController;
+import model.exception.CampoInvalidoException;
 import model.exception.ClienteComTelefoneException;
 import model.seletor.ClienteSeletor;
 import model.vo.telefonia.Cliente;
@@ -159,7 +160,6 @@ public class PainelListagemCliente extends JPanel {
 		this.add(dtNascimentoFinal);
 
 		btnGerarPlanilha = new JButton("Gerar Planilha (Aula 12)");
-		btnGerarPlanilha.setEnabled(false);
 		btnGerarPlanilha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser janelaSelecaoDestinoArquivo = new JFileChooser();
@@ -168,8 +168,13 @@ public class PainelListagemCliente extends JPanel {
 				int opcaoSelecionada = janelaSelecaoDestinoArquivo.showSaveDialog(null);
 				if (opcaoSelecionada == JFileChooser.APPROVE_OPTION) {
 					String caminhoEscolhido = janelaSelecaoDestinoArquivo.getSelectedFile().getAbsolutePath();
-					//TODO decomentar na aula 11
-					//controller.gerarRelatorio(clientes, caminhoEscolhido);
+					String resultado;
+					try {
+						resultado = controller.gerarPlanilha(clientes, caminhoEscolhido);
+						JOptionPane.showMessageDialog(null, resultado);
+					} catch (CampoInvalidoException e1) {
+						JOptionPane.showConfirmDialog(null, e1.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
+					}
 				}
 			}
 		});

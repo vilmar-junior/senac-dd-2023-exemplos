@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.Banco;
+import model.seletor.TelefoneSeletor;
 import model.vo.telefonia.Telefone;
 
 public class TelefoneDAO {
@@ -126,6 +127,15 @@ public class TelefoneDAO {
 			Banco.closeConnection(conexao);
 		}
 		return excluiu;
+	}
+	
+	//TODO implementar
+	public List<Telefone> consultarComSeletor(TelefoneSeletor seletor) {
+		List<Telefone> telefones = new ArrayList<Telefone>();
+		
+		//TODO implementar
+		
+		return telefones;
 	}
 	
 	public List<Telefone> consultarTodos() {

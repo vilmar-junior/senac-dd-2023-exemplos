@@ -1,48 +1,23 @@
 package executavel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import controller.ClienteController;
-import controller.EnderecoController;
-import model.bo.ClienteBO;
-import model.exception.CampoInvalidoException;
-import model.exception.CpfJaUtilizadoException;
-import model.exception.EnderecoInvalidoException;
+import model.gerador.GeradorPlanilha;
 import model.vo.telefonia.Cliente;
-import model.vo.telefonia.Endereco;
 
 public class ExecutavelTelefonia {
 
 	public static void main(String[] args) {
 		
-		Endereco endereco1 = new EnderecoController().consultarPorId(1);
+		List<Cliente> clientes = new ClienteController().consultarTodos(); 
+		String destinoPlanilhaClientes = "C:\\Windows\\planilhaClientes";
 		
-		//Alterei mais uma vez
-		//Mais uma 
+		GeradorPlanilha gerador = new GeradorPlanilha();
+		String resultado = gerador.gerarPlanilhaClientes(clientes, destinoPlanilhaClientes);
 		
-		ClienteController controladorDeClientes = new ClienteController();
-		
-		Cliente novoCliente = new Cliente();
-		novoCliente.setNome("Mário Neto Filho Zico");
-		novoCliente.setCpf("191222333142342342342342");
-		novoCliente.setEndereco(endereco1);
-		novoCliente.setAtivo(true);
-		novoCliente.setTelefones(new ArrayList());
-
-		try {
-			novoCliente = controladorDeClientes.inserir(novoCliente);
-			
-			JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso! Id gerado: " + novoCliente.getId(), 
-					"Sucesso", JOptionPane.INFORMATION_MESSAGE);
-			
-			//Exemplo de captura de múltiplas exceções, válido apenas a partir do Java versão 7
-		} catch (CpfJaUtilizadoException 
-					| EnderecoInvalidoException 
-					| CampoInvalidoException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), 
-					"Erro", JOptionPane.ERROR_MESSAGE);
-		} 
+		JOptionPane.showMessageDialog(null, resultado);
 	}
 }
