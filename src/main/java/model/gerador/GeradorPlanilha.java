@@ -17,8 +17,6 @@ import model.vo.telefonia.Endereco;
 public class GeradorPlanilha {
 	
 	public String gerarPlanilhaClientes(List<Cliente> clientes, String destinoArquivo) {
-		//String nome, String cpf, LocalDate dataNascimento, 
-		//List<Telefone> telefones, boolean ativo, Endereco endereco
 		HSSFWorkbook arquivoExcel = new HSSFWorkbook();
 		HSSFSheet abaPlanilha = arquivoExcel.createSheet("Clientes");
 		
@@ -46,9 +44,17 @@ public class GeradorPlanilha {
 	}
 	
 	public String gerarPlanilhaEnderecos(List<Endereco> enderecos, String destinoArquivo) {
+		//TODO implementar
+		
+		//Criar arquivo da planilha (workbook)
 		HSSFWorkbook arquivoExcel = null;
 		
-		//TODO implementar
+		//Criar aba da planilha (sheet)
+		
+		//Criar linha de cabeçalho
+		
+		//Criar linhaS com os dados dos endereços
+		
 		return salvarNoDisco(arquivoExcel, destinoArquivo);
 	}
 	

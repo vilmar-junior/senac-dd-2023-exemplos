@@ -33,7 +33,7 @@ public class MenuTelefonia {
 				try {
 					MenuTelefonia window = new MenuTelefonia();
 					//Comando para iniciar a tela maximizada
-					//window.frmSistemaDeTelefonia.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					window.frmSistemaDeTelefonia.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					window.frmSistemaDeTelefonia.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
