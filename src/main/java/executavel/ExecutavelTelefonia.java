@@ -11,7 +11,7 @@ import model.vo.telefonia.Cliente;
 public class ExecutavelTelefonia {
 
 	public static void main(String[] args) {
-		
+		//TESTE
 		List<Cliente> clientes = new ClienteController().consultarTodos(); 
 		String destinoPlanilhaClientes = "C:\\Windows\\planilhaClientes";
 		
